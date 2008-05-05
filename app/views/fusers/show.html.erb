@@ -1,0 +1,13 @@
+<h1>Username: <%=h @fuser.login %></h1>
+Favs: <%=h @fuser.favs %><br />
+url: <%=h @fuser.url %><br />
+activated_at: <%=h @fuser.activated_at %><br />
+<%= link_to 'Show transfers', :controller=>:transfers, :user=>@fuser %>
+<%if current_fuser%>
+  <%if current_fuser==@fuser%>
+    - <%= link_to 'Edit', edit_fuser_path(@fuser) %>
+  <%else%>
+    - <%= link_to 'Thank (1 fav)', {:controller=>:transfers, :receiver=>@fuser},:method=>:post, :confirm=>"Are you sure?" %> - 
+    <%= link_to 'Thank', {:controller=>:transfers, :receiver=>@fuser, :action=>'new'} %> 
+  <%end%>
+<%end%>

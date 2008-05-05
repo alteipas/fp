@@ -1,0 +1,30 @@
+<h1>New transfer</h1>
+
+<%= error_messages_for :transfer %>
+
+User: <%=@current_fuser.login if @current_fuser%>
+
+Receiver: <%=@receiver.login%>
+
+<% form_for(@transfer) do |f| %>
+ <p>
+    <%= f.hidden_field :receiver_id %>
+  </p>
+
+
+  <p>
+    <b>Amount</b><br />
+    <%= f.text_field :amount %>
+  </p>
+
+  <p>
+    <b>Description</b><br />
+    <%= f.text_area :description, :rows=>3 %>
+  </p>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', transfers_path %>

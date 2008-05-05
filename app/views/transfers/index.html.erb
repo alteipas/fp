@@ -1,0 +1,29 @@
+<h1>Listing transfers</h1>
+<table>
+  <tr>
+    <th>Receiver</th>
+    <th>Sender</th>
+    <th>Amount</th>
+    <th>Created at</th>
+    <th>Description</th>
+    <th>Link</th>
+  </tr>
+
+<% for transfer in @transfers %>
+  <tr>
+    <td><%=h transfer.receiver_id %></td>
+    <td><%=h transfer.sender_id %></td>
+    <td><%=h transfer.amount %></td>
+    <td><%=h transfer.created_at %></td>
+    <td><%=h transfer.description %></td>
+    <td><%=h transfer.link %></td>
+    <td><%= link_to 'Show', transfer %></td>
+    <td><%= link_to 'Edit', edit_transfer_path(transfer) %></td>
+    <td><%= link_to 'Destroy', transfer, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New transfer', new_transfer_path %>

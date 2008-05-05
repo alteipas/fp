@@ -1,0 +1,25 @@
+<h1>Editing fuser</h1>
+
+<%= error_messages_for :fuser %>
+
+<% form_for(@fuser) do |f| %>
+  <%= f.hidden_field :id%>
+  <p>
+    <b>Url</b><br />
+    <%= f.text_field :url %>
+  </p>
+  <p>
+    <b>Password</b><br />
+    <%= f.password_field :password %>
+  </p>
+  <p>
+    <b>Password confirmation</b><br />
+    <%= f.password_field :password_confirmation %>
+  </p>
+
+
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @fuser %> |
