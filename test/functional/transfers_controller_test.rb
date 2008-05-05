@@ -35,7 +35,6 @@ class TransfersControllerTest < Test::Unit::TestCase
   def test_redirect_if_get_new_without_login
     get :new
     assert_response 302
-    assert_redirected_to :controller=>"session", :action=>"index"
   end
   def test_should_create_transfer
     assert_difference('Transfer.count') do

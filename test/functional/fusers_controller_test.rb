@@ -22,11 +22,11 @@ class FusersControllerTest < Test::Unit::TestCase
   def set_basic_authentication(login,password)
     @request.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::b64encode("#{login}:#{password}")
   end
-  def test_routes
-    assert_routing "fusers", {:controller=>"fusers",:action=>"index"}
-    assert_routing "midas", {:controller=>"fusers",:action=>"show",:id=>"midas"}
-
-  end
+#  def test_routes
+#    assert_routing "fusers", {:controller=>"fusers",:action=>"index"}
+#    assert_routing "midas", {:controller=>"fusers",:action=>"show",:id=>"midas"}
+#
+#  end
   def test_should_get_show
     get :show, :id=>'quentin'
     assert_response 200
