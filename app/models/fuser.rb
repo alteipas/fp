@@ -6,8 +6,7 @@ class Fuser < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  #validates_presence_of     :email
-
+  validates_presence_of     :url,                        :unless => :login, :message=>"should be given if no username"
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
@@ -24,6 +23,9 @@ class Fuser < ActiveRecord::Base
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation, :url, :name
 
+  def login?
+    login
+  end
   def to_xml(*params)
     params[0]={:only=>[:id, :login, :favs, :url, :activated_at, :name]} unless params[0]
     super(*params)

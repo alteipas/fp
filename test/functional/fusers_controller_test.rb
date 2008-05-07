@@ -128,12 +128,6 @@ class FusersControllerTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_not_require_login_on_signup
-    login_as('quentin2')
-    assert_difference 'Fuser.count' do
-      create_fuser(:login => nil)
-    end
-  end
   def test_should_signup_without_require_password
     login_as('quentin2')
     assert_difference 'Fuser.count' do

@@ -44,12 +44,20 @@ class FuserTest < Test::Unit::TestCase
     assert_not_nil user.activation_code
   end
 
-  def test_should_not_require_login
+  def test_should_create_without_login_if_url
     assert_difference 'Fuser.count' do
-      u = create_fuser(:login => nil)
+      u = create_fuser(:login => nil, :url=>"una")
       #assert u.errors.on(:login)
     end
   end
+  def test_should_not_create_without_login_not_url
+    assert_no_difference 'Fuser.count' do
+      u = create_fuser(:login => nil, :url=>nil)
+      #assert u.errors.on(:login)
+    end
+  end
+
+
   def test_should_require_password_if_no_email
     assert_no_difference 'Fuser.count' do
       u = create_fuser(:password => nil, :email=>nil)
