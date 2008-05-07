@@ -76,7 +76,8 @@ class FusersController < ApplicationController
         #self.current_fuser = @fuser
         flash[:notice] = '... has been invited!'
         format.html { redirect_to (current_fuser) }
-        format.xml  { render :xml => @fuser.to_xml }
+        format.xml  { render :xml => @fuser.to_xml, :status => :created, :location => @fuser }
+}
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @fuser.errors, :status => :unprocessable_entity }
