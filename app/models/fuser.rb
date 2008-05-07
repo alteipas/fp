@@ -6,23 +6,26 @@ class Fuser < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  validates_presence_of     :login, :email
+  #validates_presence_of     :email
+
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
-  validates_confirmation_of :password,                   :if => :password_required?
-  validates_length_of       :login,    :within => 3..40
-  validates_length_of       :email,    :within => 3..100
-  validates_uniqueness_of   :login, :email, :case_sensitive => false
+  validates_confirmation_of :password, :if => :password_confirmation?
+
+  validates_length_of       :login,    :within => 3..40, :allow_nil => true
+  validates_length_of       :email,    :within => 3..100, :allow_nil => true
+  validates_uniqueness_of   :login, :case_sensitive => false, :allow_nil => true
+  validates_uniqueness_of   :email, :case_sensitive => false, :allow_nil => true
   validates_numericality_of :favs, :greater_than_or_equal_to=>0
   before_save :encrypt_password
   before_create :make_activation_code 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation, :url
+  attr_accessible :login, :email, :password, :password_confirmation, :url, :name
 
   def to_xml(*params)
-    params[0]={:only=>[:id, :login, :favs, :url, :activated_at]} unless params[0]
+    params[0]={:only=>[:id, :login, :favs, :url, :activated_at, :name]} unless params[0]
     super(*params)
   end
   def self.find(id_or_username,*others)
@@ -40,7 +43,7 @@ class Fuser < ActiveRecord::Base
     save(false)
   end
   def to_param
-    login
+    login || id.to_s
   end
   def active?
     # the existence of an activation code means they have not activated yet
@@ -49,7 +52,8 @@ class Fuser < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
+    #u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
+    u = find :first, :conditions => ['login = ?', login] # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
 
@@ -106,9 +110,12 @@ class Fuser < ActiveRecord::Base
     end
       
     def password_required?
-      crypted_password.blank? || !password.blank?
+      !email and (crypted_password.blank? || !password.blank?) or password
     end
     
+    def password_confirmation?
+      password
+    end
     def make_activation_code
 
       self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )

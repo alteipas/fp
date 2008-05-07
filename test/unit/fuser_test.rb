@@ -4,7 +4,12 @@ class FuserTest < Test::Unit::TestCase
   # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead.
   # Then, you can remove it from this and the functional test.
   include AuthenticatedTestHelper
-  fixtures :fusers
+  #fixtures :fusers
+  def setup
+    @aaron=Fuser.create(:login=>"aaron",:password=>"pass",:password_confirmation=>"pass",:email=>"aaron@email.com")
+    @quentin=Fuser.create(:login=>"quentin",:password=>"pass",:password_confirmation=>"pass",:email=>"quentin2@email.com")
+ 
+  end
   def test_to_xml_include_login_and_favs
     fuser=create_fuser
     assert fuser.valid?
@@ -39,16 +44,15 @@ class FuserTest < Test::Unit::TestCase
     assert_not_nil user.activation_code
   end
 
-  def test_should_require_login
-    assert_no_difference 'Fuser.count' do
+  def test_should_not_require_login
+    assert_difference 'Fuser.count' do
       u = create_fuser(:login => nil)
-      assert u.errors.on(:login)
+      #assert u.errors.on(:login)
     end
   end
-
-  def test_should_require_password
+  def test_should_require_password_if_no_email
     assert_no_difference 'Fuser.count' do
-      u = create_fuser(:password => nil)
+      u = create_fuser(:password => nil, :email=>nil)
       assert u.errors.on(:password)
     end
   end
@@ -60,15 +64,14 @@ class FuserTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_require_email
-    assert_no_difference 'Fuser.count' do
+  def test_should_create_without_email
+    assert_difference 'Fuser.count' do
       u = create_fuser(:email => nil)
-      assert u.errors.on(:email)
     end
   end
 
   def test_should_reset_password
-    #fusers(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
+    #@quentin.update_attributes(:password => 'new password', :password_confirmation => 'new password')
     u=create_fuser
     u.activate
     u.update_attributes(:password => 'new password', :password_confirmation => 'new password')
@@ -76,7 +79,7 @@ class FuserTest < Test::Unit::TestCase
   end
 
   def test_should_not_rehash_password
-    #fusers(:quentin).update_attributes(:login => 'quentin2') #it seems login isn't updated
+    #@quentin.update_attributes(:login => 'quentin2') #it seems login isn't updated
     u=create_fuser(:password=>"test", :password_confirmation=>"test")
     login='newlogin'
     u.activate
@@ -85,46 +88,46 @@ class FuserTest < Test::Unit::TestCase
   end
 
   def test_should_authenticate_user
-    assert_equal fusers(:quentin), Fuser.authenticate('quentin', 'test')
+    assert_equal @quentin, Fuser.authenticate('quentin', 'pass')
   end
 
   def test_should_set_remember_token
-    fusers(:quentin).remember_me
-    assert_not_nil fusers(:quentin).remember_token
-    assert_not_nil fusers(:quentin).remember_token_expires_at
+    @quentin.remember_me
+    assert_not_nil @quentin.remember_token
+    assert_not_nil @quentin.remember_token_expires_at
   end
 
   def test_should_unset_remember_token
-    fusers(:quentin).remember_me
-    assert_not_nil fusers(:quentin).remember_token
-    fusers(:quentin).forget_me
-    assert_nil fusers(:quentin).remember_token
+    @quentin.remember_me
+    assert_not_nil @quentin.remember_token
+    @quentin.forget_me
+    assert_nil @quentin.remember_token
   end
 
   def test_should_remember_me_for_one_week
     before = 1.week.from_now.utc
-    fusers(:quentin).remember_me_for 1.week
+    @quentin.remember_me_for 1.week
     after = 1.week.from_now.utc
-    assert_not_nil fusers(:quentin).remember_token
-    assert_not_nil fusers(:quentin).remember_token_expires_at
-    assert fusers(:quentin).remember_token_expires_at.between?(before, after)
+    assert_not_nil @quentin.remember_token
+    assert_not_nil @quentin.remember_token_expires_at
+    assert @quentin.remember_token_expires_at.between?(before, after)
   end
 
   def test_should_remember_me_until_one_week
     time = 1.week.from_now.utc
-    fusers(:quentin).remember_me_until time
-    assert_not_nil fusers(:quentin).remember_token
-    assert_not_nil fusers(:quentin).remember_token_expires_at
-    assert_equal fusers(:quentin).remember_token_expires_at, time
+    @quentin.remember_me_until time
+    assert_not_nil @quentin.remember_token
+    assert_not_nil @quentin.remember_token_expires_at
+    assert_equal @quentin.remember_token_expires_at, time
   end
 
   def test_should_remember_me_default_two_weeks
     before = 2.weeks.from_now.utc
-    fusers(:quentin).remember_me
+    @quentin.remember_me
     after = 2.weeks.from_now.utc
-    assert_not_nil fusers(:quentin).remember_token
-    assert_not_nil fusers(:quentin).remember_token_expires_at
-    assert fusers(:quentin).remember_token_expires_at.between?(before, after)
+    assert_not_nil @quentin.remember_token
+    assert_not_nil @quentin.remember_token_expires_at
+    assert @quentin.remember_token_expires_at.between?(before, after)
   end
 
 protected

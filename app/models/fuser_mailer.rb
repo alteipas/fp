@@ -1,9 +1,10 @@
 class FuserMailer < ActionMailer::Base
   def signup_notification(fuser)
     setup_email(fuser)
-    @subject    += 'Please activate your new account'
+    #@subject    += 'Please activate your new account'
+    @subject    += '... has thanked you..' #TODO
   
-    @body[:url]  = "http://localhost:3000/activate/#{fuser.activation_code}"
+    @body[:url]  = "http://localhost:3000/thanked/#{fuser.activation_code}"
   
   end
   

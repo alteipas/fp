@@ -1,6 +1,4 @@
 class TransfersController < ApplicationController
-  include AuthenticatedSystem
-  include AuthenticatedSystemMod
   before_filter :login_required, :only=>[:new]
   def new
     unless p=params[:transfer]

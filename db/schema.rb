@@ -23,7 +23,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.string   "activation_code",           :limit => 40
     t.datetime "activated_at"
     t.integer  "favs",                                    :default => 0
-    t.string   "url"
+    t.string   "url",                                     :default => ""
+    t.string   "name",                                    :default => ""
   end
 
   create_table "transfers", :force => true do |t|

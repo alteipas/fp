@@ -1,7 +1,8 @@
 class AddMoreToFusers < ActiveRecord::Migration
   def self.up
     add_column :fusers, :favs, :integer, :default=>0
-    add_column :fusers, :url, :string
+    add_column :fusers, :url, :string, :default=>""
+    add_column :fusers, :name, :string, :default=>""
     fuser=Fuser.create(
             :login => "midas",
             :email => "midas@hecpeare.net",

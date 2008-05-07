@@ -8,7 +8,7 @@ class TransfersControllerTest < Test::Unit::TestCase
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
     login="mylogin"; pass="pass"
-    @fuser=create_fuser_and_activate(:login=>login,:password=>pass,:password_confirmation=>"mypass")
+    @fuser=create_fuser_and_activate(:login=>login,:password=>pass,:password_confirmation=>pass)
     set_basic_authentication(login,pass)
   end
   def set_basic_authentication(login,password)
@@ -20,14 +20,15 @@ class TransfersControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:transfers)
   end
   def test_should_get_new
-    login_as('quentin')
-    get :new, :receiver=>'aaron'
+    login_as('mylogin')
+    u=create_fuser_and_activate(:key=>'newuser')
+    get :new, :receiver=>'newuser'
     assert_response :success
     #assert_not_nil assigns(:transfers)
   end
 
   def test_redirect_if_get_new_without_receiver
-    login_as('quentin')
+    login_as('mylogin')
     get :new
     assert_response 302
   end
@@ -61,8 +62,8 @@ class TransfersControllerTest < Test::Unit::TestCase
 
   protected
   def create_fuser_and_activate(options = {})
-    aleat='quire' + (10000+rand(89999)).to_s
-    record = Fuser.new({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat }.merge(options))
+    key=options[:key] || 'quire' + (10000+rand(89999)).to_s
+    record = Fuser.new({ :login => key, :email => key + '@example.com', :password => key, :password_confirmation => key }.merge(options))
     record.favs=50
     record.activate
     record.save

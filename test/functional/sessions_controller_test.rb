@@ -9,12 +9,13 @@ class SessionsControllerTest < Test::Unit::TestCase
   # Then, you can remove it from this and the units test.
   include AuthenticatedTestHelper
 
-  fixtures :fusers
+  #fixtures :fusers
 
   def setup
     @controller = SessionsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    @quentin=Fuser.create(:login=>"quentin",:password=>"test",:password_confirmation=>"test",:email=>"quentin2@email.com")
   end
 
   def test_should_get_root
@@ -34,7 +35,7 @@ class SessionsControllerTest < Test::Unit::TestCase
   end
 
   def test_should_logout
-    login_as :quentin
+    login_as "quentin"
     get :destroy
     assert_nil session[:fuser_id]
     assert_response :redirect
@@ -51,28 +52,28 @@ class SessionsControllerTest < Test::Unit::TestCase
   end
   
   def test_should_delete_token_on_logout
-    login_as :quentin
+    login_as "quentin"
     get :destroy
     assert_equal @response.cookies["auth_token"], []
   end
 
   def test_should_login_with_cookie
-    fusers(:quentin).remember_me
-    @request.cookies["auth_token"] = cookie_for(:quentin)
+    @quentin.remember_me
+    @request.cookies["auth_token"] = cookie_for("quentin")
     get :new
     assert @controller.send(:logged_in?)
   end
 
   def test_should_fail_expired_cookie_login
-    fusers(:quentin).remember_me
-    fusers(:quentin).update_attribute :remember_token_expires_at, 5.minutes.ago
-    @request.cookies["auth_token"] = cookie_for(:quentin)
+    @quentin.remember_me
+    @quentin.update_attribute :remember_token_expires_at, 5.minutes.ago
+    @request.cookies["auth_token"] = cookie_for("quentin")
     get :new
     assert !@controller.send(:logged_in?)
   end
 
   def test_should_fail_cookie_login
-    fusers(:quentin).remember_me
+    @quentin.remember_me
     @request.cookies["auth_token"] = auth_token('invalid_auth_token')
     get :new
     assert !@controller.send(:logged_in?)
@@ -84,6 +85,6 @@ class SessionsControllerTest < Test::Unit::TestCase
     end
     
     def cookie_for(fuser)
-      auth_token fusers(fuser).remember_token
+      auth_token Fuser.find(fuser).remember_token
     end
 end
