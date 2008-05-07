@@ -1,6 +1,6 @@
 class FusersController < ApplicationController
   before_filter :login_required, :except=>[:show, :activate, :new, :index, :invitation]
-  before_filter :find_fuser, :only=>[:update, :test_auth, :show]
+  before_filter :find_fuser, :only=>[:update, :test_auth, :show, :edit]
   before_filter :current_fuser_and_id_must_match, :only=>[:new, :update, :test_auth]
 
   #before_filter :login_from_basic_auth, :only=>[:test]
@@ -77,7 +77,6 @@ class FusersController < ApplicationController
         flash[:notice] = '... has been invited!'
         format.html { redirect_to (current_fuser) }
         format.xml  { render :xml => @fuser.to_xml, :status => :created, :location => @fuser }
-}
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @fuser.errors, :status => :unprocessable_entity }
@@ -99,10 +98,13 @@ class FusersController < ApplicationController
 
   def find_fuser
     @fuser = Fuser.find(params[:id])
-    10.times do
-      logger.debug("AAAAAAAAAAAAAA: " + params[:id])
+    unless @fuser
+      respond_to do |format|
+        format.html { render :file => 'public/404.html', :status=>404 }
+        format.xml  { head 404 }
+      end
     end
-  end
+   end
   def current_fuser_and_id_must_match
     #if !@current_fuser or (params[:id]!=@current_fuser.login and params[:id].to_i!=@current_fuser.id)
     access_denied if @fuser != @current_fuser
