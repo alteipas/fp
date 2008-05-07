@@ -50,7 +50,7 @@ class FusersController < ApplicationController
     end
     p.delete(:login) if @fuser.login        ## TODO: return 403 instead of deleting it and 200
     respond_to do |format|  ## Next code should do it, but it seems there are a fixtures problem (or something else). Test: test_not_update_username
-      if p.include?(:email) and @fuser.email != nil #or (p.include?(login) and p[:login]!=@fuser.login and !@fuser.login)
+      if p.include?(:email) and @fuser.active? #or (p.include?(login) and p[:login]!=@fuser.login and !@fuser.login)
         format.xml{ head 403 }
       elsif @fuser.update_attributes(p)
         flash[:notice] = 'Fuser was successfully updated.'

@@ -1,13 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'fusers_controller'
 
-module PublicCurrentFuser
-  def current_fuser
-    super
-  end
-end
-FusersController.send(:include,PublicCurrentFuser)
-
 # Re-raise errors caught by the controller.
 class FusersController; def rescue_action(e) raise e end; end
 
@@ -15,11 +8,7 @@ class FusersControllerTest < Test::Unit::TestCase
   # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead
   # Then, you can remove it from this and the units test.
   include AuthenticatedTestHelper
-
-
-
-
-  #fixtures :fusers
+  include PublicCurrentFuserTestHelper
 
   def setup
     @aaron=Fuser.create(:login=>"aaron",:password=>"pass",:password_confirmation=>"pass",:email=>"aaron@email.com")
@@ -66,6 +55,7 @@ class FusersControllerTest < Test::Unit::TestCase
   def test_not_update_email
     #xml
     login_as('quentin2')
+    get :activate, :activation_code => @quentin2.activation_code
     put :update, :id=>'quentin2', :fuser=>{:email=>"newemail@server.com"}, :format=>'xml'
     assert_response 403
   end
@@ -101,15 +91,16 @@ class FusersControllerTest < Test::Unit::TestCase
     end
     assert_equal nil,Fuser.find('newuser').email
     assert_equal nil, u.email
-    #get :activate, :activation_code => Fuser.find('newuser').activation_code
-    login_as('newuser')
-    assert_equal 33, @controller.current_fuser.login
+    @controller.current_fuser=(u) # TODO: login_as('newuser') doesn't work. Why?
+    assert_equal "newuser", @controller.current_fuser.login
     put :update, :id=>'newuser', :email=>'my@email33.com', :format=>'xml'
 
     assert_equal "my@email33.com",Fuser.find('newuser').email
     assert_response :success
 
-    #if email is set, it can't be updated (for now).
+    get :activate, :activation_code => Fuser.find('newuser').activation_code
+
+    #if email is set (activated), it can't be updated (for now).
     put :update, :id=>'newuser', :email=>'myRENEW@email33.com'
     assert_response 403
     assert_equal "my@email33.com",Fuser.find('newuser').email
