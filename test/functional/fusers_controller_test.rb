@@ -1,6 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'fusers_controller'
 
+module PublicCurrentFuser
+  def current_fuser
+    super
+  end
+end
+FusersController.send(:include,PublicCurrentFuser)
+
 # Re-raise errors caught by the controller.
 class FusersController; def rescue_action(e) raise e end; end
 
@@ -9,11 +16,15 @@ class FusersControllerTest < Test::Unit::TestCase
   # Then, you can remove it from this and the units test.
   include AuthenticatedTestHelper
 
+
+
+
   #fixtures :fusers
 
   def setup
     @aaron=Fuser.create(:login=>"aaron",:password=>"pass",:password_confirmation=>"pass",:email=>"aaron@email.com")
     @quentin2=Fuser.create(:login=>"quentin2",:password=>"pass",:password_confirmation=>"pass",:email=>"quentin2@email.com")
+    ActionMailer::Base.deliveries = []
     @controller = FusersController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
@@ -72,18 +83,27 @@ class FusersControllerTest < Test::Unit::TestCase
     put :update, :id=>'aaron', :email=>'my@emailbb.com', :format=>'xml'
     assert_response 403
   end
+  def test_mail
+    login_as('quentin2')
+    assert_difference 'Fuser.count' do
+      create_fuser(:email => "hector@hecpeare.net")
+    end
+    assert !ActionMailer::Base.deliveries.empty?
 
+  end
   def test_should_update_email_only_first_time
     login_as('aaron')
     u=nil
     assert_difference 'Fuser.count' do
       create_fuser(:email => nil, :login => 'newuser')
+      assert ActionMailer::Base.deliveries.empty?
       u=assigns(:fuser)
     end
     assert_equal nil,Fuser.find('newuser').email
     assert_equal nil, u.email
-    get :activate, :activation_code => Fuser.find('newuser').activation_code
+    #get :activate, :activation_code => Fuser.find('newuser').activation_code
     login_as('newuser')
+    assert_equal 33, @controller.current_fuser.login
     put :update, :id=>'newuser', :email=>'my@email33.com', :format=>'xml'
 
     assert_equal "my@email33.com",Fuser.find('newuser').email
