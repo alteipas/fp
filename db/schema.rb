@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 3) do
+ActiveRecord::Schema.define(:version => 4) do
 
   create_table "fusers", :force => true do |t|
     t.string   "login"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.integer  "favs",                                    :default => 0
     t.string   "url",                                     :default => ""
     t.string   "name",                                    :default => ""
+    t.integer  "inviter_id"
+    t.integer  "invitation_amount",                       :default => 1
   end
 
   create_table "transfers", :force => true do |t|

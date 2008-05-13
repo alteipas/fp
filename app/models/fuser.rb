@@ -2,11 +2,17 @@ require 'digest/sha1'
 class Fuser < ActiveRecord::Base
   has_many :inputs, :class_name => "Transfer", :order=>'created_at DESC', :foreign_key=>'receiver_id'
   has_many :outputs, :class_name => "Transfer", :order=>'created_at DESC', :foreign_key=>'sender_id'
+  has_many :invited_fusers, :class_name => "Fuser", :order=>'created_at DESC', :foreign_key=>'inviter_id'
+  belongs_to :inviter, 
+             :class_name => "Fuser" ,
+             :foreign_key => "inviter_id"
+
 
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
   validates_presence_of     :url,                        :unless => :login, :message=>"should be given if no username"
+  validates_presence_of     :inviter_id,                        :unless => :superuser?
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
@@ -17,12 +23,32 @@ class Fuser < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false, :allow_nil => true
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_nil => true
   validates_numericality_of :favs, :greater_than_or_equal_to=>0
+  validate_on_create :inviter_enough_favs#, :unless => :superuser?
+  after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password
   before_create :make_activation_code 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation, :url, :name
+  attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id, :invitation_amount
+  def superuser?
+    login=='midas'
+  end
+  def inviter_enough_favs
 
+    if !superuser?
+      if !inviter.superuser? && inviter.favs < (invitation_amount || 1)
+        errors.add_to_base("inviter doesn't have enough favs")
+        false
+      else
+        true
+      end
+    end
+  end
+  def first_transfer
+    File.open("out2","w"){|f| f.puts inviter_id.to_s}
+    t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_amount || 1) unless superuser?
+    t
+  end
   def login?
     login
   end

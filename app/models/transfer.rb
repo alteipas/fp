@@ -22,10 +22,11 @@ class Transfer < ActiveRecord::Base
 #    super(*params)
 #  end
   def substract_and_add_ok
+
     s=self.sender
     r=self.receiver
     if s and r
-      s.favs=s.favs-self.amount
+      s.favs=s.favs-self.amount unless s.superuser?
       r.favs=r.favs+self.amount
       if s.valid? and r.valid?
         #transaction?
@@ -33,12 +34,15 @@ class Transfer < ActiveRecord::Base
         r.save
       else
         if s.favs<0
-          errors.add_to_base("sender hasn't enough favs")
+          errors.add_to_base("sender doesn't have enough favs")
         else
           errors.add_to_base("error!!")
         end
       end
+
     end
+
+    File.open("out","w"){|f| f.puts s.inspect}
   end
 
  

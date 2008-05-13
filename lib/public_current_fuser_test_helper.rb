@@ -8,5 +8,6 @@ module PublicCurrentFuserTestHelper
     end
   end
   ApplicationController.send(:include,RedefinedMethods)
+
 end
 

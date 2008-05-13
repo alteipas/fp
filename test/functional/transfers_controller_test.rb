@@ -8,6 +8,7 @@ class TransfersControllerTest < Test::Unit::TestCase
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
     login="mylogin"; pass="pass"
+    @midas=Fuser.create(:login=>'midas', :email=>'midas@hecpeare.net')
     @fuser=create_fuser_and_activate(:login=>login,:password=>pass,:password_confirmation=>pass)
     set_basic_authentication(login,pass)
   end
@@ -38,8 +39,10 @@ class TransfersControllerTest < Test::Unit::TestCase
     assert_response 302
   end
   def test_should_create_transfer
+    @fuser.favs=50 ; @fuser.save # (loged as @fuser)
+    r=create_fuser_and_activate
     assert_difference('Transfer.count') do
-      post :create, :transfer => {:receiver=>create_fuser_and_activate}
+      post :create, :transfer => {:receiver=>r}
     end
     assert_redirected_to transfer_path(assigns(:transfer))
   end
@@ -63,10 +66,9 @@ class TransfersControllerTest < Test::Unit::TestCase
   protected
   def create_fuser_and_activate(options = {})
     key=options[:key] || 'quire' + (10000+rand(89999)).to_s
-    record = Fuser.new({ :login => key, :email => key + '@example.com', :password => key, :password_confirmation => key }.merge(options))
-    record.favs=50
+    record = Fuser.create({ :login => key, :email => key + '@example.com', :password => key, :password_confirmation => key, :inviter_id=>@midas.id }.merge(options))
     record.activate
-    record.save
+    record.reload if record.valid?
     record
   end
 

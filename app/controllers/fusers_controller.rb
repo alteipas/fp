@@ -69,11 +69,10 @@ class FusersController < ApplicationController
     # uncomment at your own risk
     # reset_session
     p=params[:fuser]
+    p[:inviter_id]=current_fuser.id
     @fuser = Fuser.new(p)
     respond_to do |format|
       if @fuser.save
-        Transfer.create(:receiver=>@fuser, :sender=>current_fuser) #TODO: no favs, no create?
-        #self.current_fuser = @fuser
         flash[:notice] = '... has been invited!'
         format.html { redirect_to (current_fuser) }
         format.xml  { render :xml => @fuser.to_xml, :status => :created, :location => @fuser }

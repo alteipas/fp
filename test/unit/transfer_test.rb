@@ -1,12 +1,20 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TransferTest < ActiveSupport::TestCase
+  def setup
+    @midas=Fuser.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
+    @user1=create_fuser(:login=>"user1")
+    @user2=create_fuser(:login=>"user2")
+ 
+ 
+  end
   def test_truth
     assert true
   end
   def test_create_transfer
-    t=create_transfer
-    assert t.valid?
+    assert_difference 'Transfer.count' do
+      t=create_transfer
+    end
   end
   def test_no_create_transfer_if_missing_sender_or_receiver
     t=create_transfer(:sender=>nil)
@@ -51,13 +59,12 @@ class TransferTest < ActiveSupport::TestCase
   end
   protected
   def create_transfer(options = {})
-    t=Transfer.create({:sender=>create_fuser,:receiver=>create_fuser,:amount=>1}.merge(options))
+    t=Transfer.create({:sender=>@midas,:receiver=>@user1,:amount=>1}.merge(options))
   end
   def create_fuser(options = {})
     aleat='quire' + (10000+rand(89999)).to_s
-    record = Fuser.new({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat }.merge(options))
-    record.favs=50
-    record.save
+    record = Fuser.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :inviter_id=>Fuser.find('midas').id, :invitation_favs=>50}.merge(options))
+    record.reload if record.valid?
     record
   end
 

@@ -11,16 +11,15 @@ class FusersControllerTest < Test::Unit::TestCase
   include PublicCurrentFuserTestHelper
 
   def setup
-    @user1=Fuser.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com")
-    @user2=Fuser.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com")
-    ActionMailer::Base.deliveries = []
     @controller = FusersController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    #login="midas"; pass="pass"
-    #@user=User.create(:login=>login,:password=>pass,:password_confirmation=>pass,:email=>"my@email.com")
-    #set_basic_authentication(login,pass)
+    
+    @midas=Fuser.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net", :inviter_id=>nil)
+    @user1=Fuser.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com", :inviter_id=>@midas.id)
+    @user2=Fuser.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com", :inviter_id=>@midas.id)
 
+    ActionMailer::Base.deliveries = []
   end
   def set_basic_authentication(login,password)
     @request.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::b64encode("#{login}:#{password}")
@@ -30,6 +29,9 @@ class FusersControllerTest < Test::Unit::TestCase
 #    assert_routing "midas", {:controller=>"fusers",:action=>"show",:id=>"midas"}
 #
 #  end
+  def test_truth
+    @user1.valid?
+  end
   def test_should_get_show
     get :show, :id=>'user2'
     assert_response 200
@@ -85,18 +87,18 @@ class FusersControllerTest < Test::Unit::TestCase
     login_as('user1')
     u=nil
     assert_difference 'Fuser.count' do
-      create_fuser(:email => nil, :login => 'newuser')
+      u=create_fuser(:email => nil, :login => 'newuser')
       assert ActionMailer::Base.deliveries.empty?
-      u=assigns(:fuser)
     end
     assert_equal nil,Fuser.find('newuser').email
     assert_equal nil, u.email
+    login_as('newuser')
     @controller.current_fuser=(u) # TODO: login_as('newuser') doesn't work. Why?
     assert_equal "newuser", @controller.current_fuser.login
     put :update, :id=>'newuser', :email=>'my@email33.com', :format=>'xml'
 
-    assert_equal "my@email33.com",Fuser.find('newuser').email
     assert_response :success
+    assert_equal "my@email33.com",Fuser.find('newuser').email
 
     get :activate, :activation_code => Fuser.find('newuser').activation_code
 
@@ -139,9 +141,8 @@ class FusersControllerTest < Test::Unit::TestCase
     login_as('user2')
     assert_no_difference 'Fuser.count' do
       create_fuser(:password_confirmation => nil,:email=>nil)
-      assert assigns(:fuser).errors.on(:password_confirmation)
-      #assert_response :success
     end
+    assert assigns(:fuser).errors.on(:password_confirmation)
   end
 
   def test_should_create_without_email
@@ -152,17 +153,6 @@ class FusersControllerTest < Test::Unit::TestCase
     end
   end
  
-  def test_login_as_from_fixtures_or_db
-    login_as('user2')
-    assert_difference 'Fuser.count' do
-      create_fuser(:email => nil, :login => 'newuser')
-    end
-    login_as('newuser')
-    assert_difference 'Fuser.count' do
-      create_fuser
-    end
-  end
-  
   def test_should_sign_up_user_with_activation_code
     login_as('user2')
     create_fuser
@@ -198,13 +188,17 @@ class FusersControllerTest < Test::Unit::TestCase
   protected
     def create_fuser(options = {})
       
-      key='quire' + (10000+rand(89999)).to_s unless key=options.delete(:key)
+      key='aleat' + (10000+rand(89999)).to_s unless key=options.delete(:key)
 
       post :create, :fuser => {
         :login => key,
         :email => key + '@example.com',
         :password => key,
-        :password_confirmation => key
+        :password_confirmation => key,
+        :inviter_id=>Fuser.find('midas').id
       }.merge(options)
+      fuser=assigns(:fuser)
+      fuser.reload if fuser.valid?
+      fuser
     end
 end

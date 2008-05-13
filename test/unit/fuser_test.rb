@@ -6,8 +6,9 @@ class FuserTest < Test::Unit::TestCase
   include AuthenticatedTestHelper
   #fixtures :fusers
   def setup
-    @user1=Fuser.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com")
-    @user2=Fuser.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user22@email.com")
+    @midas=Fuser.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
+    @user1=create_fuser(:login=>"user1")
+    @user2=create_fuser(:login=>"user2",:password=>"pass",:password_confirmation=>"pass")
  
   end
   def test_to_xml_include_login_and_favs
@@ -19,9 +20,6 @@ class FuserTest < Test::Unit::TestCase
     fuser=create_fuser
     assert fuser.valid?
     assert !fuser.to_xml.include?("<email>")
-  end
-  def test_cero_default_favs
-    assert_equal 0, create_fuser(:favs=>0).favs
   end
   def test_shouldnt_save_user_if_negative_favs
     user=create_fuser
@@ -74,10 +72,44 @@ class FuserTest < Test::Unit::TestCase
 
   def test_should_create_without_email
     assert_difference 'Fuser.count' do
-      u = create_fuser(:email => nil)
+      u = create_fuser(:email=>nil)
     end
   end
 
+  def test_should_create_transfer_by_inviter
+    @user1.favs=50
+    assert @user1.save
+    u=nil
+  
+    assert_difference 'Transfer.count' do
+      u = create_fuser(:inviter_id=>@user1.id)
+    end
+    assert u
+    assert_equal 1,u.favs
+    @user1.reload
+    assert_equal 49,@user1.favs
+    u2 = create_fuser(:inviter_id=>@user1.id, :invitation_amount=>5)
+    assert_equal 5,u2.favs
+    @user1.reload
+    assert_equal 44,@user1.favs
+  end
+  def test_not_create_transfer_if_inviter_no_favs
+    @user1.favs=0
+    @user1.save
+    u=nil
+    assert_no_difference 'Transfer.count' do
+      u = create_fuser(:inviter_id=>@user1.id)
+    end
+    assert !u.valid?
+
+    @user1.favs=4
+    @user1.save
+    assert_no_difference 'Transfer.count' do
+      u = create_fuser(:inviter_id=>@user1.id, :invitation_amount=>5)
+    end
+    assert !u.valid?
+ 
+  end
   def test_should_reset_password
     #@user2.update_attributes(:password => 'new password', :password_confirmation => 'new password')
     u=create_fuser
@@ -140,9 +172,10 @@ class FuserTest < Test::Unit::TestCase
 
 protected
   def create_fuser(options = {})
-    aleat='quire' + (10000+rand(89999)).to_s
-    record = Fuser.new({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat }.merge(options))
-    record.favs=options['favs'] || 0
+    aleat='aleat' + (10000+rand(89999)).to_s
+    record = Fuser.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :inviter_id=>Fuser.find('midas').id }.merge(options))
+    record.reload if record.valid?
+    record.favs=options['favs'] if options['favs']
     record.save
     record
   end
