@@ -1,8 +1,12 @@
 class InhabitantMailer < ActionMailer::Base
   def signup_notification(inhabitant)
+    @inviter=inhabitant.inviter
     setup_email(inhabitant)
-    #@subject    += 'Please activate your new account'
-    @subject    += '... has thanked you..' #TODO
+    if @inviter
+      @subject    += "#{@inviter.name} has thanked you"
+    else
+      @subject += "midas or error"
+    end
   
     @body[:url]  = "http://localhost:3000/thanked/#{inhabitant.activation_code}"
   
@@ -17,7 +21,7 @@ class InhabitantMailer < ActionMailer::Base
   protected
     def setup_email(inhabitant)
       @recipients  = "#{inhabitant.email}"
-      @from        = "ADMINEMAIL"
+      @from        = "info@favpal.org"
       @subject     = "[FavPal] "
       @sent_on     = Time.now
       @body[:inhabitant] = inhabitant

@@ -1,8 +1,6 @@
-Your account has been created.
-
-  Username: <%= @inhabitant.login %>
-  Password: <%= @inhabitant.password %>
-
-Visit this url to activate your account:
-
-  <%= @url %>
+<%i=@inviter%>
+<%if i%>
+  <%=i.name || i.login || i.email || i.url || i.id %> has thanked you with <%=@inhabitant.invitation_amount%> favs!
+<%end%>
+Visit this url to set your password:
+<%= @url %>
