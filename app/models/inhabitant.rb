@@ -44,9 +44,7 @@ class Inhabitant < ActiveRecord::Base
     end
   end
   def first_transfer
-    File.open("out2","w"){|f| f.puts inviter_id.to_s}
     t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_amount || 1) unless superuser?
-    t
   end
   def login?
     login

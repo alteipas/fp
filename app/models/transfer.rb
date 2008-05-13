@@ -13,16 +13,7 @@ class Transfer < ActiveRecord::Base
   def sender_isnt_receiver
     errors.add_to_base("You can't thank yourself!") if receiver == sender
   end
-#  def self.new(*params)
-#    File.open("debug","w"){|f| f.puts params.inspect}
-#    sender=params[0][:sender]
-#    if sender && (sender.class==String or sender.class==Fixnum)
-#      params[0][:sender]=Inhabitant.find(sender)
-#    end
-#    super(*params)
-#  end
   def substract_and_add_ok
-
     s=self.sender
     r=self.receiver
     if s and r
@@ -41,8 +32,6 @@ class Transfer < ActiveRecord::Base
       end
 
     end
-
-    File.open("out","w"){|f| f.puts s.inspect}
   end
 
  
