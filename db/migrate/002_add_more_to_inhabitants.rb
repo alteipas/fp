@@ -4,7 +4,7 @@ class AddMoreToInhabitants < ActiveRecord::Migration
     add_column :inhabitants, :url, :string, :default=>""
     add_column :inhabitants, :name, :string, :default=>""
     add_column :inhabitants, :inviter_id, :integer
-    add_column :inhabitants, :invitation_amount, :integer, :default=>1
+    add_column :inhabitants, :invitation_favs, :integer, :default=>1
   end
 
 

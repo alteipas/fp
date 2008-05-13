@@ -28,14 +28,14 @@ class Inhabitant < ActiveRecord::Base
   before_create :make_activation_code 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id, :invitation_amount
+  attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id, :invitation_favs
   def superuser?
     login=='midas'
   end
   def inviter_enough_favs
 
     if !superuser?
-      if !inviter.superuser? && inviter.favs < (invitation_amount || 1)
+      if !inviter.superuser? && inviter.favs < (invitation_favs || 1)
         errors.add_to_base("inviter doesn't have enough favs")
         false
       else
@@ -44,7 +44,7 @@ class Inhabitant < ActiveRecord::Base
     end
   end
   def first_transfer
-    t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_amount || 1) unless superuser?
+    t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_favs || 1) unless superuser?
   end
   def login?
     login

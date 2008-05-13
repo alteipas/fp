@@ -1,6 +1,6 @@
 <%i=@inviter%>
 <%if i%>
-  <%=i.name || i.login || i.email || i.url || i.id %> has thanked you with <%=@inhabitant.invitation_amount%> favs!
+  <%=i.name || i.login || i.email || i.url || i.id %> has thanked you with <%=@inhabitant.invitation_favs%> favs!
 <%end%>
 Visit this url to set your password:
 <%= @url %>

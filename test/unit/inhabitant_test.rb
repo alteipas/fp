@@ -81,7 +81,7 @@ class InhabitantTest < Test::Unit::TestCase
     assert_equal 1,u.favs
     @user1.reload
     assert_equal 49,@user1.favs
-    u2 = create_inhabitant(:inviter_id=>@user1.id, :invitation_amount=>5)
+    u2 = create_inhabitant(:inviter_id=>@user1.id, :invitation_favs=>5)
     assert_equal 5,u2.favs
     @user1.reload
     assert_equal 44,@user1.favs
@@ -98,7 +98,7 @@ class InhabitantTest < Test::Unit::TestCase
     @user1.favs=4
     @user1.save
     assert_no_difference 'Transfer.count' do
-      u = create_inhabitant(:inviter_id=>@user1.id, :invitation_amount=>5)
+      u = create_inhabitant(:inviter_id=>@user1.id, :invitation_favs=>5)
     end
     assert !u.valid?
  

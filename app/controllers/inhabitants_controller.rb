@@ -90,7 +90,7 @@ class InhabitantsController < ApplicationController
 
   def prepare_params(params)
     p=params[:inhabitant] || {}
-    [:login,:email,:id,:url,:password,:password_confirmation].each do |arg|
+    [:login,:email,:id,:url,:password,:password_confirmation,:invitation_favs].each do |arg|
       if p[arg] && p[arg]==""
         p.delete(arg)
       elsif params[arg]
