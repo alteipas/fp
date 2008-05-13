@@ -39,17 +39,9 @@ class FusersController < ApplicationController
   # PUT /fusers/1
   # PUT /fusers/1.xml
   def update
-    p=params[:fuser] || {}
-    %w(login email id url password password_confirmation).each do |n|
-      arg=n.to_sym
-      if p[arg] && p[arg]==""
-        p.delete(arg)
-      elsif params[arg]
-        p[arg]=params.delete(arg)
-      end
-    end
+    p=prepare_params(params)
     p.delete(:login) if @fuser.login        ## TODO: return 403 instead of deleting it and 200
-    respond_to do |format|  ## Next code should do it, but it seems there are a fixtures problem (or something else). Test: test_not_update_username
+    respond_to do |format|  ## Next code should do it, but it seems there is a fixtures problem (or something else). Test: test_not_update_username
       if p.include?(:email) and @fuser.active? #or (p.include?(login) and p[:login]!=@fuser.login and !@fuser.login)
         format.xml{ head 403 }
       elsif @fuser.update_attributes(p)
@@ -68,12 +60,12 @@ class FusersController < ApplicationController
     # request forgery protection.
     # uncomment at your own risk
     # reset_session
-    p=params[:fuser]
+    p=prepare_params(params)
     p[:inviter_id]=current_fuser.id
     @fuser = Fuser.new(p)
     respond_to do |format|
       if @fuser.save
-        flash[:notice] = '... has been invited!'
+        flash[:notice] = "#{@fuser.name} has been invited!"
         format.html { redirect_to (current_fuser) }
         format.xml  { render :xml => @fuser.to_xml, :status => :created, :location => @fuser }
       else
@@ -93,7 +85,20 @@ class FusersController < ApplicationController
       redirect_back_or_default('/')
     end
   end
+
   protected
+
+  def prepare_params(params)
+    p=params[:fuser] || {}
+    [:login,:email,:id,:url,:password,:password_confirmation].each do |arg|
+      if p[arg] && p[arg]==""
+        p.delete(arg)
+      elsif params[arg]
+        p[arg]=params.delete(arg)
+      end
+    end
+    p
+  end
 
   def find_fuser
     @fuser = Fuser.find(params[:id])
