@@ -59,10 +59,4 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
-require "smtp_tls"
 
-ActionMailer::Base.smtp_settings = {:address => "smtp.gmail.com",
-	:port => 587,
-	:authentication => :plain,
-	:user_name => "test@fav2fav.com",
-	:password => '8ajL98wPkL'}
