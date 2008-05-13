@@ -1,13 +1,13 @@
 module AuthenticatedTestHelper
-  # Sets the current fuser in the session from the fuser fixtures.
-  def login_as(fuser)
-    #@request.session[:fuser_id] = fuser ? fusers(fuser).id : nil
-    @request.session[:fuser_id] = fuser ? Fuser.find(fuser).id : nil
+  # Sets the current inhabitant in the session from the inhabitant fixtures.
+  def login_as(inhabitant)
+    #@request.session[:inhabitant_id] = inhabitant ? inhabitants(inhabitant).id : nil
+    @request.session[:inhabitant_id] = inhabitant ? Inhabitant.find(inhabitant).id : nil
   end
 
 
-  def authorize_as(fuser)
-    #@request.env["HTTP_AUTHORIZATION"] = fuser ? ActionController::HttpAuthentication::Basic.encode_credentials(fusers(fuser).login, 'test') : nil
-    @request.env["HTTP_AUTHORIZATION"] = fuser ? ActionController::HttpAuthentication::Basic.encode_credentials(Fuser.find(fuser).login, 'pass') : nil
+  def authorize_as(inhabitant)
+    #@request.env["HTTP_AUTHORIZATION"] = inhabitant ? ActionController::HttpAuthentication::Basic.encode_credentials(inhabitants(inhabitant).login, 'test') : nil
+    @request.env["HTTP_AUTHORIZATION"] = inhabitant ? ActionController::HttpAuthentication::Basic.encode_credentials(Inhabitant.find(inhabitant).login, 'pass') : nil
   end
 end

@@ -1,0 +1,14 @@
+<h1>Username: <%=h @inhabitant.login %></h1>
+Favs: <%=h @inhabitant.favs %><br />
+url: <%=h @inhabitant.url %><br />
+activated_at: <%=h @inhabitant.activated_at %><br />
+<%= link_to 'Show transfers', :controller=>:transfers, :user=>@inhabitant %>
+<%if current_inhabitant%>
+  <%if current_inhabitant==@inhabitant%> - 
+    <%= link_to 'Edit', edit_inhabitant_path(@inhabitant) %> - 
+    <%=link_to "Invite", :controller=>"inhabitants", :action=>"new"%>
+  <%else%>
+    - <%= link_to 'Thank (1 fav)', {:controller=>:transfers, :receiver=>@inhabitant},:method=>:post, :confirm=>"Are you sure?" %> - 
+    <%= link_to 'Thank', {:controller=>:transfers, :receiver=>@inhabitant, :action=>'new'} %> 
+  <%end%>
+<%end%>

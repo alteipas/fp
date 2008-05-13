@@ -1,9 +1,9 @@
 class Transfer < ActiveRecord::Base
   belongs_to :receiver,
-             :class_name => "Fuser" ,
+             :class_name => "Inhabitant" ,
              :foreign_key => "receiver_id"
   belongs_to :sender,
-             :class_name => "Fuser" ,
+             :class_name => "Inhabitant" ,
              :foreign_key => "sender_id"
   validates_presence_of     :sender_id, :receiver_id
   validates_numericality_of :amount, :greater_than=>0
@@ -17,7 +17,7 @@ class Transfer < ActiveRecord::Base
 #    File.open("debug","w"){|f| f.puts params.inspect}
 #    sender=params[0][:sender]
 #    if sender && (sender.class==String or sender.class==Fixnum)
-#      params[0][:sender]=Fuser.find(sender)
+#      params[0][:sender]=Inhabitant.find(sender)
 #    end
 #    super(*params)
 #  end

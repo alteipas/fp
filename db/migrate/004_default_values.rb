@@ -1,16 +1,16 @@
 class DefaultValues < ActiveRecord::Migration
   def self.up
-    fuser=Fuser.create(
+    inhabitant=Inhabitant.create(
             :login => "midas",
             :email => "midas@hecpeare.net",
             :password => "pass",
             :password_confirmation => "pass"
     )
-    fuser.activate
+    inhabitant.activate
  
   end
 
   def self.down
-    Fuser.find('midas').destroy
+    Inhabitant.find('midas').destroy
   end
 end

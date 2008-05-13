@@ -8,10 +8,10 @@ ActionController::Routing::Routes.draw do |map|
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.resource :session
   
-  #map.connect ':id', :controller => 'fusers', :action => 'show', :requirements=>{:id=>/^(?!fusers)/}
-  map.test_auth '/api/test_auth/:id.xml',   :controller => 'fusers', :action => 'test_auth', :format =>'xml'
-  map.activate '/thanked/:activation_code', :controller => 'fusers', :action => 'activate'
-  map.signup '/invite',                     :controller => 'fusers', :action => 'new'
-  map.resources :fusers
-  map.connect ':id',                        :controller => 'fusers', :action => 'show'
+  #map.connect ':id', :controller => 'inhabitants', :action => 'show', :requirements=>{:id=>/^(?!inhabitants)/}
+  map.test_auth '/api/test_auth/:id.xml',   :controller => 'inhabitants', :action => 'test_auth', :format =>'xml'
+  map.activate '/thanked/:activation_code', :controller => 'inhabitants', :action => 'activate'
+  map.signup '/invite',                     :controller => 'inhabitants', :action => 'new'
+  map.resources :inhabitants
+  map.connect ':id',                        :controller => 'inhabitants', :action => 'show'
 end

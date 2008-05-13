@@ -4,15 +4,15 @@ class SessionsController < ApplicationController
   def new
   end
   def root
-    current_fuser
+    current_inhabitant
   end
  
   def create
-    self.current_fuser = Fuser.authenticate(params[:login], params[:password])
+    self.current_inhabitant = Inhabitant.authenticate(params[:login], params[:password])
     if logged_in?
       if params[:remember_me] == "1"
-        current_fuser.remember_me unless current_fuser.remember_token?
-        cookies[:auth_token] = { :value => self.current_fuser.remember_token , :expires => self.current_fuser.remember_token_expires_at }
+        current_inhabitant.remember_me unless current_inhabitant.remember_token?
+        cookies[:auth_token] = { :value => self.current_inhabitant.remember_token , :expires => self.current_inhabitant.remember_token_expires_at }
       end
       redirect_back_or_default('/')
       flash[:notice] = "Logged in successfully"
@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    self.current_fuser.forget_me if logged_in?
+    self.current_inhabitant.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
     flash[:notice] = "You have been logged out."

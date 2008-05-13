@@ -1,0 +1,38 @@
+<h1>Editing inhabitant</h1>
+
+<%= error_messages_for :inhabitant %>
+
+<% form_for(@inhabitant) do |f| %>
+
+  <%unless @inhabitant.login%>
+    <p>
+      <b>Login</b> (only set first time) <br />
+      <%= f.text_field :login %>
+    </p>
+  <%end%>
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <b>Url</b><br />
+    <%= f.text_field :url %>
+  </p>
+  <%= f.hidden_field :id%>
+  <br />
+  Set/change your password (optional):
+  <p>
+    <b>Password</b><br />
+    <%= f.password_field :password %>
+  </p>
+  <p>
+    <b>Password confirmation</b><br />
+    <%= f.password_field :password_confirmation %>
+  </p>
+
+
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @inhabitant %> |

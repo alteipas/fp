@@ -5,7 +5,7 @@ class TransfersController < ApplicationController
       p={}; [:amount, :description, :receiver].each{|k| p[k]=params[k] if params[k]}
     end
 
-    if !p[:receiver] || !@receiver=Fuser.find(p[:receiver])
+    if !p[:receiver] || !@receiver=Inhabitant.find(p[:receiver])
       flash[:notice]="Missing or invalid receiver"
       redirect_back_or_default('/transfers')
     end
@@ -17,9 +17,9 @@ class TransfersController < ApplicationController
   # GET /transfers.xml
   def index
     conditions=[]
-    sender=Fuser.find(params[:sender]) if params[:sender]
-    receiver=Fuser.find(params[:receiver]) if params[:receiever]
-    user=Fuser.find(params[:user]) if params[:user]
+    sender=Inhabitant.find(params[:sender]) if params[:sender]
+    receiver=Inhabitant.find(params[:receiver]) if params[:receiever]
+    user=Inhabitant.find(params[:user]) if params[:user]
     if user
       conditions=["sender_id=? or receiver_id=?",user.id,user.id]
     elsif sender and receiver
@@ -33,7 +33,7 @@ class TransfersController < ApplicationController
 
     @transfers=Transfer.find(:all, :order=>'created_at DESC', :conditions=>conditions)
     #@transfers = Transfer.find(:all)
-    current_fuser
+    current_inhabitant
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @transfers }
@@ -57,13 +57,13 @@ class TransfersController < ApplicationController
 #    @sender=nil
 #    authenticate_or_request_with_http_basic do |username, password|
 #      #username == "hector" && password == "pass"
-#      @sender=Fuser.authenticate(username,password)
+#      @sender=Inhabitant.authenticate(username,password)
 #    end
     
     p=params[:transfer]
     @transfer = Transfer.new(p.merge(
-      :sender=>current_fuser,
-      :receiver=>Fuser.find(p[:receiver_id] || p[:receiver])
+      :sender=>current_inhabitant,
+      :receiver=>Inhabitant.find(p[:receiver_id] || p[:receiver])
     ))
 
     respond_to do |format|
@@ -82,8 +82,8 @@ class TransfersController < ApplicationController
   def authorize
     authenticate_or_request_with_http_basic do |username, password|
       #username == "hector" && password == "pass"
-      @fuser=Fuser.authenticate(username,password)
-      @fuser.id == params[:transfer][:sender_id] if @fuser
+      @inhabitant=Inhabitant.authenticate(username,password)
+      @inhabitant.id == params[:transfer][:sender_id] if @inhabitant
     end
   end
 

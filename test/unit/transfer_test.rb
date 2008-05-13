@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TransferTest < ActiveSupport::TestCase
   def setup
-    @midas=Fuser.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
-    @user1=create_fuser(:login=>"user1")
-    @user2=create_fuser(:login=>"user2")
+    @midas=Inhabitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
+    @user1=create_inhabitant(:login=>"user1")
+    @user2=create_inhabitant(:login=>"user2")
  
  
   end
@@ -23,7 +23,7 @@ class TransferTest < ActiveSupport::TestCase
     assert !t.valid?
   end
   def test_substract_favs_from_sender
-    u=create_fuser
+    u=create_inhabitant
     u.favs=50
     u.save
     t=create_transfer(:sender=>u, :amount=>1)
@@ -31,22 +31,22 @@ class TransferTest < ActiveSupport::TestCase
     assert_equal 49, u.favs
   end
   def test_sender_isnt_receiver
-    u=create_fuser
+    u=create_inhabitant
     t=create_transfer(:receiver=>u, :sender=>u)
     assert !t.valid?
   end
   def test_add_favs_to_receiver
-    u=create_fuser
-    u2=create_fuser
+    u=create_inhabitant
+    u2=create_inhabitant
     favs_before=u.favs
     t=create_transfer(:receiver=>u, :sender=>u2, :amount=>1)
     u.reload
     assert_equal favs_before+1, u.favs
   end
   def test_shouldnt_add_if_sender_doesnt_have
-    u=create_fuser
+    u=create_inhabitant
     u_favs_before=u.favs
-    u2=create_fuser
+    u2=create_inhabitant
     u2.favs=0
     u2.save
     t=create_transfer(:receiver=>u, :sender=>u2, :amount=>1)
@@ -61,9 +61,9 @@ class TransferTest < ActiveSupport::TestCase
   def create_transfer(options = {})
     t=Transfer.create({:sender=>@midas,:receiver=>@user1,:amount=>1}.merge(options))
   end
-  def create_fuser(options = {})
+  def create_inhabitant(options = {})
     aleat='quire' + (10000+rand(89999)).to_s
-    record = Fuser.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :inviter_id=>Fuser.find('midas').id, :invitation_favs=>50}.merge(options))
+    record = Inhabitant.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :inviter_id=>Inhabitant.find('midas').id, :invitation_favs=>50}.merge(options))
     record.reload if record.valid?
     record
   end

@@ -1,34 +1,34 @@
 module AuthenticatedSystem
   protected
-    # Returns true or false if the fuser is logged in.
-    # Preloads @current_fuser with the fuser model if they're logged in.
+    # Returns true or false if the inhabitant is logged in.
+    # Preloads @current_inhabitant with the inhabitant model if they're logged in.
     def logged_in?
-      !!current_fuser
+      !!current_inhabitant
     end
 
-    # Accesses the current fuser from the session. 
+    # Accesses the current inhabitant from the session. 
     # Future calls avoid the database because nil is not equal to false.
-    def current_fuser
-      @current_fuser ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_fuser == false
+    def current_inhabitant
+      @current_inhabitant ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_inhabitant == false
     end
 
-    # Store the given fuser id in the session.
-    def current_fuser=(new_fuser)
-      session[:fuser_id] = new_fuser ? new_fuser.id : nil
-      @current_fuser = new_fuser || false
+    # Store the given inhabitant id in the session.
+    def current_inhabitant=(new_inhabitant)
+      session[:inhabitant_id] = new_inhabitant ? new_inhabitant.id : nil
+      @current_inhabitant = new_inhabitant || false
     end
 
-    # Check if the fuser is authorized
+    # Check if the inhabitant is authorized
     #
     # Override this method in your controllers if you want to restrict access
-    # to only a few actions or if you want to check if the fuser
+    # to only a few actions or if you want to check if the inhabitant
     # has the correct rights.
     #
     # Example:
     #
     #  # only allow nonbobs
     #  def authorized?
-    #    current_fuser.login != "bob"
+    #    current_inhabitant.login != "bob"
     #  end
     def authorized?
       logged_in?
@@ -57,7 +57,7 @@ module AuthenticatedSystem
     # The default action is to redirect to the login screen.
     #
     # Override this method in your controllers if you want to have special
-    # behavior in case the fuser is not authorized
+    # behavior in case the inhabitant is not authorized
     # to access the requested action.  For example, a popup window might
     # simply close itself.
     def access_denied
@@ -87,30 +87,30 @@ module AuthenticatedSystem
       session[:return_to] = nil
     end
 
-    # Inclusion hook to make #current_fuser and #logged_in?
+    # Inclusion hook to make #current_inhabitant and #logged_in?
     # available as ActionView helper methods.
     def self.included(base)
-      base.send :helper_method, :current_fuser, :logged_in?
+      base.send :helper_method, :current_inhabitant, :logged_in?
     end
 
-    # Called from #current_fuser.  First attempt to login by the fuser id stored in the session.
+    # Called from #current_inhabitant.  First attempt to login by the inhabitant id stored in the session.
     def login_from_session
-      self.current_fuser = Fuser.find_by_id(session[:fuser_id]) if session[:fuser_id]
+      self.current_inhabitant = Inhabitant.find_by_id(session[:inhabitant_id]) if session[:inhabitant_id]
     end
 
-    # Called from #current_fuser.  Now, attempt to login by basic authentication information.
+    # Called from #current_inhabitant.  Now, attempt to login by basic authentication information.
     def login_from_basic_auth
       authenticate_with_http_basic do |username, password|
-        self.current_fuser = Fuser.authenticate(username, password)
+        self.current_inhabitant = Inhabitant.authenticate(username, password)
       end
     end
 
-    # Called from #current_fuser.  Finaly, attempt to login by an expiring token in the cookie.
+    # Called from #current_inhabitant.  Finaly, attempt to login by an expiring token in the cookie.
     def login_from_cookie
-      fuser = cookies[:auth_token] && Fuser.find_by_remember_token(cookies[:auth_token])
-      if fuser && fuser.remember_token?
-        cookies[:auth_token] = { :value => fuser.remember_token, :expires => fuser.remember_token_expires_at }
-        self.current_fuser = fuser
+      inhabitant = cookies[:auth_token] && Inhabitant.find_by_remember_token(cookies[:auth_token])
+      if inhabitant && inhabitant.remember_token?
+        cookies[:auth_token] = { :value => inhabitant.remember_token, :expires => inhabitant.remember_token_expires_at }
+        self.current_inhabitant = inhabitant
       end
     end
 end
