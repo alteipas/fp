@@ -11,7 +11,6 @@ class Fuser < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  validates_presence_of     :url,                        :unless => :login, :message=>"should be given if no username"
   validates_presence_of     :inviter_id,                        :unless => :superuser?
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
