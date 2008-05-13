@@ -22,6 +22,7 @@ class Inhabitant < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false, :allow_nil => true
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_nil => true
   validates_numericality_of :favs, :greater_than_or_equal_to=>0
+  validates_numericality_of :invitation_favs, :greater_than=>0
   validate_on_create :inviter_enough_favs#, :unless => :superuser?
   after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password

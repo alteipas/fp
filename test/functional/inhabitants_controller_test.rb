@@ -170,6 +170,12 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     assert @user1.active?
     assert_equal @user1, Inhabitant.authenticate('user1', 'pass')
   end
+  def test_nn
+    login_as(@user1)
+    assert_no_difference 'Inhabitant.count' do
+      create_inhabitant(:invitation_favs=>0)
+    end
+  end
   
   def test_should_not_activate_user_without_key
     get :activate
@@ -177,7 +183,6 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   rescue ActionController::RoutingError
     # in the event your routes deny this, we'll just bow out gracefully.
   end
-
   def test_should_not_activate_user_with_blank_key
     get :activate, :activation_code => ''
     assert_nil flash[:notice]
@@ -194,11 +199,10 @@ class InhabitantsControllerTest < Test::Unit::TestCase
         :login => key,
         :email => key + '@example.com',
         :password => key,
-        :password_confirmation => key,
-        :inviter_id=>Inhabitant.find('midas').id
+        :password_confirmation => key
       }.merge(options)
       inhabitant=assigns(:inhabitant)
-      inhabitant.reload if inhabitant.valid?
+      inhabitant.reload if inhabitant && inhabitant.valid?
       inhabitant
     end
 end
