@@ -23,5 +23,11 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   config.active_record.default_timezone = :utc
 end
+if ENV['RAILS_ENV']=='production'
+  URL='http://favpal.org'
+else
+  URL='http://localhost:3000'
+end
+
 
 

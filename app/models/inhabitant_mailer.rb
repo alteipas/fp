@@ -8,14 +8,14 @@ class InhabitantMailer < ActionMailer::Base
       @subject += "midas or error"
     end
   
-    @body[:url]  = "http://localhost:3000/thanked/#{inhabitant.activation_code}"
+    @body[:url]  = "#{URL}/thanked/#{inhabitant.activation_code}"
   
   end
   
   def activation(inhabitant)
     setup_email(inhabitant)
     @subject    += 'Your account has been activated!'
-    @body[:url]  = "http://localhost:3000/"
+    @body[:url]  = "#{URL}/"
   end
   
   protected
