@@ -8,13 +8,13 @@ class InhabitantMailer < ActionMailer::Base
       @subject += "midas or error"
     end
   
-    @body[:url]  = "#{URL}/thanked/#{inhabitant.activation_code}"
+    @body[:url]  = "#{URL}/token/#{inhabitant.login_by_email_token}"
   
   end
   def forgot(inhabitant)
     setup_email(inhabitant)
     @subject    += "password change"
-    @body[:url]  = "#{URL}/thanked/#{inhabitant.activation_code}"
+    @body[:url]  = "#{URL}/token/#{inhabitant.login_by_email_token}"
   end
   
   def activation(inhabitant)

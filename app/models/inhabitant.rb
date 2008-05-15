@@ -26,7 +26,7 @@ class Inhabitant < ActiveRecord::Base
   validate_on_create :inviter_enough_favs#, :unless => :superuser?
   after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password
-  before_create :make_activation_code 
+  before_create :make_login_by_email_token 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id, :invitation_favs
@@ -61,14 +61,14 @@ class Inhabitant < ActiveRecord::Base
   def activate
     @activated = true
     self.activated_at = Time.now.utc
-    self.activation_code = nil
+    self.login_by_email_token = nil
     save(false)
   end
   def to_param
     login || id.to_s
   end
   def active?
-    !activated_at.nil? #activation_code.nil?
+    !activated_at.nil? #login_by_email_token.nil?
   end
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
@@ -122,8 +122,8 @@ class Inhabitant < ActiveRecord::Base
     @activated
   end
 
-  def make_activation_code
-    self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
+  def make_login_by_email_token
+    self.login_by_email_token = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
   end
  
   protected

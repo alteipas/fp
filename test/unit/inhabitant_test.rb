@@ -36,10 +36,10 @@ class InhabitantTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_initialize_activation_code_upon_creation
+  def test_should_initialize_login_by_email_token_upon_creation
     user = create_inhabitant
     user.reload
-    assert_not_nil user.activation_code
+    assert_not_nil user.login_by_email_token
   end
 
   def test_should_create_without_login

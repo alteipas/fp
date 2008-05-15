@@ -57,20 +57,20 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   def test_not_update_email
     #xml
     login_as('user2')
-    get :activate, :activation_code => @user2.activation_code
+    get :activate, :login_by_email_token => @user2.login_by_email_token
     put :update, :id=>'user2', :inhabitant=>{:email=>"newemail@server.com"}, :format=>'xml'
     assert_response 403
   end
   
   def test_weird
 
-    #get :activate, :activation_code => @user1.activation_code
-    get :activate, :activation_code => @user2.activation_code
+    #get :activate, :login_by_email_token => @user1.login_by_email_token
+    get :activate, :login_by_email_token => @user2.login_by_email_token
     login_as('user2')
     put :update, :id=>'user2', :email=>'my@email33.com', :format=>'xml'
     assert_response 403
 
-    get :activate, :activation_code => @user1.activation_code #why can't I move it to the first line??
+    get :activate, :login_by_email_token => @user1.login_by_email_token #why can't I move it to the first line??
     login_as('user1')
     put :update, :id=>'user1', :email=>'my@emailbb.com', :format=>'xml'
     assert_response 403
@@ -100,7 +100,7 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_equal "my@email33.com",Inhabitant.find('newuser').email
 
-    get :activate, :activation_code => Inhabitant.find('newuser').activation_code
+    get :activate, :login_by_email_token => Inhabitant.find('newuser').login_by_email_token
 
     #if email is set (activated), it can't be updated (for now).
     put :update, :id=>'newuser', :email=>'myRENEW@email33.com'
@@ -153,17 +153,17 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     end
   end
  
-  def test_should_sign_up_user_with_activation_code
+  def test_should_sign_up_user_with_login_by_email_token
     login_as('user2')
     create_inhabitant
     assigns(:inhabitant).reload
-    assert_not_nil assigns(:inhabitant).activation_code
+    assert_not_nil assigns(:inhabitant).login_by_email_token
   end
 
   def test_should_activate_user
     assert !@user1.active?
     assert Inhabitant.authenticate('user1', 'pass') #It isn't required activate before login (no signup, invitation or signup through other website)
-    get :activate, :activation_code => Inhabitant.find('user1').activation_code
+    get :activate, :login_by_email_token => Inhabitant.find('user1').login_by_email_token
     assert_redirected_to "/inhabitants/user1/edit"
     assert_not_nil flash[:notice]
     @user1.reload
@@ -171,7 +171,7 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     assert_equal @user1, Inhabitant.authenticate('user1', 'pass')
   end
   def test_should_login_from_email
-    get :activate, :activation_code => @user1.activation_code
+    get :activate, :login_by_email_token => @user1.login_by_email_token
     assert_redirected_to "/inhabitants/user1/edit"
     @user1.reload
     assert @user1.active?
@@ -180,8 +180,8 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     post :forgot, :email=>@user1.email
     assert !ActionMailer::Base.deliveries.empty?
     @user1.reload
-    assert @user1.activation_code
-    get :activate, :activation_code => @user1.activation_code
+    assert @user1.login_by_email_token
+    get :activate, :login_by_email_token => @user1.login_by_email_token
     assert_redirected_to "/inhabitants/user1/edit"
 
 
@@ -200,7 +200,7 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     # in the event your routes deny this, we'll just bow out gracefully.
   end
   def test_should_not_activate_user_with_blank_key
-    get :activate, :activation_code => ''
+    get :activate, :login_by_email_token => ''
     assert_nil flash[:notice]
   rescue ActionController::RoutingError
     # well played, sir

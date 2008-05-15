@@ -76,14 +76,14 @@ class InhabitantsController < ApplicationController
   end
 
   def activate
-    self.current_inhabitant = params[:activation_code].blank? ? false : Inhabitant.find_by_activation_code(params[:activation_code])
+    self.current_inhabitant = params[:login_by_email_token].blank? ? false : Inhabitant.find_by_login_by_email_token(params[:login_by_email_token])
     if logged_in?
       if !current_inhabitant.active?
         current_inhabitant.activate
         flash[:notice] = "Email activated!"
       else
         #forgot
-        current_inhabitant.activation_code = nil
+        current_inhabitant.login_by_email_token = nil
         current_inhabitant.save
       end
       redirect_to edit_inhabitant_path(current_inhabitant)
@@ -94,7 +94,7 @@ class InhabitantsController < ApplicationController
   def forgot
     if request.post?
       @inhabitant=Inhabitant.find_by_email(params[:email])
-      if @inhabitant.make_activation_code 
+      if @inhabitant.make_login_by_email_token 
         @inhabitant.save
         InhabitantMailer.deliver_forgot(@inhabitant)
         flash[:notice] = "An email has been sent to change your password"

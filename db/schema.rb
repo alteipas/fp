@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.datetime "updated_at"
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
-    t.string   "activation_code",           :limit => 40
+    t.string   "login_by_email_token",      :limit => 40
     t.datetime "activated_at"
     t.integer  "favs",                                    :default => 0
     t.string   "url",                                     :default => ""

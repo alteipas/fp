@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
   
   #map.connect ':id', :controller => 'inhabitants', :action => 'show', :requirements=>{:id=>/^(?!inhabitants)/}
   map.test_auth '/api/test_auth/:id.xml',   :controller => 'inhabitants', :action => 'test_auth', :format =>'xml'
-  map.activate '/thanked/:activation_code', :controller => 'inhabitants', :action => 'activate'
+  map.activate '/token/:login_by_email_token', :controller => 'inhabitants', :action => 'activate'
   map.signup '/invite',                     :controller => 'inhabitants', :action => 'new'
   map.resources :inhabitants
   map.connect ':id',                        :controller => 'inhabitants', :action => 'show'
