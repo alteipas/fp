@@ -25,6 +25,7 @@ class Inhabitant < ActiveRecord::Base
   validates_numericality_of :invitation_favs, :greater_than=>0
   validate_on_create :inviter_enough_favs#, :unless => :superuser?
   validate :login_not_numeric
+  validate :login_not_include_dots
   after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password
   before_create :make_login_by_email_token 
@@ -33,6 +34,9 @@ class Inhabitant < ActiveRecord::Base
   attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id, :invitation_favs
   def superuser?
     login=='midas'
+  end
+  def login_not_include_dots
+    errors.add_to_base("username can't include dots") if login =~ /\./
   end
   def login_not_numeric #required if login is optional
     errors.add_to_base("username can't be a number") if login.to_i.to_s==login

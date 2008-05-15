@@ -11,6 +11,10 @@ class InhabitantTest < Test::Unit::TestCase
     @user2=create_inhabitant(:login=>"user2",:password=>"pass",:password_confirmation=>"pass")
  
   end
+  def test_should_not_create_inhabitant_if_login_includes_dots
+    u=create_inhabitant(:login=>"hecpeare.net")
+    assert !u.valid?
+  end
   def test_login_not_number
     u=create_inhabitant(:login=>"3366")
     assert !u.valid?
