@@ -3,7 +3,7 @@ class InhabitantMailer < ActionMailer::Base
     @inviter=inhabitant.inviter
     setup_email(inhabitant)
     if @inviter
-      @subject    += "#{@inviter.name} has thanked you"
+      @subject    += "#{@inviter} has thanked you"
     else
       @subject += "midas or error"
     end

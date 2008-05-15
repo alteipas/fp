@@ -65,7 +65,7 @@ class InhabitantsController < ApplicationController
     @inhabitant = Inhabitant.new(p)
     respond_to do |format|
       if @inhabitant.save
-        flash[:notice] = "#{@inhabitant.name} has been invited!"
+        flash[:notice] = "#{@inhabitant.email} has been invited!"
         format.html { redirect_to (current_inhabitant) }
         format.xml  { render :xml => @inhabitant.to_xml, :status => :created, :location => @inhabitant }
       else
