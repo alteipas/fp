@@ -33,6 +33,9 @@ class Inhabitant < ActiveRecord::Base
   def superuser?
     login=='midas'
   end
+  def to_s
+    login || name || id.to_s
+  end
   def inviter_enough_favs
     if !superuser?
       if !inviter.superuser? && inviter.favs < (invitation_favs || 1)
