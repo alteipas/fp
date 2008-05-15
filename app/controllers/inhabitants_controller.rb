@@ -83,8 +83,8 @@ class InhabitantsController < ApplicationController
         flash[:notice] = "Email activated!"
       else
         #forgot
-        @inhabitant.activation_code = nil
-        @inhabitant.save
+        current_inhabitant.activation_code = nil
+        current_inhabitant.save
       end
       redirect_to edit_inhabitant_path(current_inhabitant)
     else
