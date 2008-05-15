@@ -11,7 +11,7 @@ class Inhabitant < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  validates_presence_of     :inviter_id,                        :unless => :superuser?
+  validates_presence_of     :inviter_id,                 :unless => :superuser?
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
@@ -24,6 +24,7 @@ class Inhabitant < ActiveRecord::Base
   validates_numericality_of :favs, :greater_than_or_equal_to=>0
   validates_numericality_of :invitation_favs, :greater_than=>0
   validate_on_create :inviter_enough_favs#, :unless => :superuser?
+  validate :login_not_numeric
   after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password
   before_create :make_login_by_email_token 
@@ -33,9 +34,10 @@ class Inhabitant < ActiveRecord::Base
   def superuser?
     login=='midas'
   end
-  def to_s
-    login || name || id.to_s
+  def login_not_numeric #required if login is optional
+    errors.add_to_base("username can't be a number") if login.to_i.to_s==login
   end
+
   def inviter_enough_favs
     if !superuser?
       if !inviter.superuser? && inviter.favs < (invitation_favs || 1)
@@ -45,9 +47,6 @@ class Inhabitant < ActiveRecord::Base
   end
   def first_transfer
     t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_favs || 1) unless superuser?
-  end
-  def login?
-    login
   end
   def to_xml(*params)
     params[0]={:only=>[:id, :login, :favs, :url, :activated_at, :name]} unless params[0]
@@ -70,6 +69,13 @@ class Inhabitant < ActiveRecord::Base
   def to_param
     login || id.to_s
   end
+  def to_s
+    login || name || id.to_s
+  end
+  def login?
+    login
+  end
+
   def active?
     !activated_at.nil? #login_by_email_token.nil?
   end
