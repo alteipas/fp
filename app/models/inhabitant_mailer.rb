@@ -11,6 +11,11 @@ class InhabitantMailer < ActionMailer::Base
     @body[:url]  = "#{URL}/thanked/#{inhabitant.activation_code}"
   
   end
+  def forgot(inhabitant)
+    setup_email(inhabitant)
+    @subject    += "password change"
+    @body[:url]  = "#{URL}/thanked/#{inhabitant.activation_code}"
+  end
   
   def activation(inhabitant)
     setup_email(inhabitant)

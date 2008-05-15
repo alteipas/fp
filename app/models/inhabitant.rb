@@ -34,7 +34,6 @@ class Inhabitant < ActiveRecord::Base
     login=='midas'
   end
   def inviter_enough_favs
-
     if !superuser?
       if !inviter.superuser? && inviter.favs < (invitation_favs || 1)
         errors.add_to_base("inviter doesn't have enough favs")
@@ -69,8 +68,7 @@ class Inhabitant < ActiveRecord::Base
     login || id.to_s
   end
   def active?
-    # the existence of an activation code means they have not activated yet
-    activation_code.nil?
+    !activated_at.nil? #activation_code.nil?
   end
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
@@ -124,6 +122,10 @@ class Inhabitant < ActiveRecord::Base
     @activated
   end
 
+  def make_activation_code
+    self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
+  end
+ 
   protected
     # before filter 
     def encrypt_password
@@ -139,9 +141,5 @@ class Inhabitant < ActiveRecord::Base
     def password_confirmation?
       password
     end
-    def make_activation_code
-
-      self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
-    end
-    
+   
 end

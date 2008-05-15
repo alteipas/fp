@@ -170,6 +170,22 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     assert @user1.active?
     assert_equal @user1, Inhabitant.authenticate('user1', 'pass')
   end
+  def test_should_login_from_email
+    get :activate, :activation_code => @user1.activation_code
+    assert_redirected_to "/inhabitants/user1/edit"
+    @user1.reload
+    assert @user1.active?
+    login_as(nil)
+    #But if we forgot our password:
+    post :forgot, :email=>@user1.email
+    assert !ActionMailer::Base.deliveries.empty?
+    @user1.reload
+    assert @user1.activation_code
+    get :activate, :activation_code => @user1.activation_code
+    assert_redirected_to "/inhabitants/user1/edit"
+
+
+  end
   def test_nn
     login_as(@user1)
     assert_no_difference 'Inhabitant.count' do

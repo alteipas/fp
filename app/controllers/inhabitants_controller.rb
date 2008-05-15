@@ -1,5 +1,5 @@
 class InhabitantsController < ApplicationController
-  before_filter :login_required, :except=>[:show, :activate, :new, :index, :invitation]
+  before_filter :login_required, :except=>[:show, :activate, :new, :index, :invitation, :forgot]
   before_filter :find_inhabitant, :only=>[:update, :test_auth, :show, :edit]
   before_filter :current_inhabitant_and_id_must_match, :only=>[:new, :update, :test_auth]
 
@@ -77,12 +77,30 @@ class InhabitantsController < ApplicationController
 
   def activate
     self.current_inhabitant = params[:activation_code].blank? ? false : Inhabitant.find_by_activation_code(params[:activation_code])
-    if logged_in? && !current_inhabitant.active?
-      current_inhabitant.activate
-      flash[:notice] = "Email activated!"
+    if logged_in?
+      if !current_inhabitant.active?
+        current_inhabitant.activate
+        flash[:notice] = "Email activated!"
+      else
+        #forgot
+        @inhabitant.activation_code = nil
+        @inhabitant.save
+      end
       redirect_to edit_inhabitant_path(current_inhabitant)
     else
       redirect_back_or_default('/')
+    end
+  end
+  def forgot
+    if request.post?
+      @inhabitant=Inhabitant.find_by_email(params[:email])
+      if @inhabitant.make_activation_code 
+        @inhabitant.save
+        InhabitantMailer.deliver_forgot(@inhabitant)
+        flash[:notice] = "An email has been sent to change your password"
+      else
+        flash[:notice] = "Email not found"
+      end
     end
   end
 

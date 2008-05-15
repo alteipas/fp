@@ -6,6 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.root              :controller => 'sessions', :action => 'root'
   map.login '/login',   :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.forgot '/forgot', :controller => 'inhabitants', :action => 'forgot'
   map.resource :session
   
   #map.connect ':id', :controller => 'inhabitants', :action => 'show', :requirements=>{:id=>/^(?!inhabitants)/}
