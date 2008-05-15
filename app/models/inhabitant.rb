@@ -38,9 +38,6 @@ class Inhabitant < ActiveRecord::Base
     if !superuser?
       if !inviter.superuser? && inviter.favs < (invitation_favs || 1)
         errors.add_to_base("inviter doesn't have enough favs")
-        false
-      else
-        true
       end
     end
   end
