@@ -11,8 +11,10 @@
 
 <% for transfer in @transfers %>
   <tr>
-    <td><%=link_to transfer.receiver, transfer.receiver.to_param %></td>
-    <td><%=link_to transfer.sender, transfer.sender.to_param %></td>
+    <%r=transfer.receiver%>
+    <td><%=link_to r, "/#{r.to_param}" %></td>
+    <%s=transfer.sender%>
+    <td><%=link_to s, "/#{s.to_param}" %></td>
     <td><%=h transfer.amount %></td>
     <td><%=h transfer.created_at %></td>
     <td><%=h transfer.description %></td>
