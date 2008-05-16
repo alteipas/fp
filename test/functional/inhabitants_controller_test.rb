@@ -183,10 +183,12 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     assert @user1.login_by_email_token
     get :activate, :login_by_email_token => @user1.login_by_email_token
     assert_redirected_to "/inhabitants/user1/edit"
-
-
   end
-  def test_nn
+#  def test_should_not_include_email_not_password_of_inhabitants_in_index TODO!!
+#    get :index
+#    assert ... assigns(:inhabitants)
+#  end
+  def test_should_not_create_inhabitant_if_invitation_favs_is_zero
     login_as(@user1)
     assert_no_difference 'Inhabitant.count' do
       create_inhabitant(:invitation_favs=>0)

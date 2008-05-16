@@ -53,8 +53,11 @@ class Inhabitant < ActiveRecord::Base
     t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_favs || 1) unless superuser?
   end
   def to_xml(*params)
-    params[0]={:only=>[:id, :login, :favs, :url, :activated_at, :name]} unless params[0]
+    params[0]={:only=>Inhabitant.public_params} unless params[0]
     super(*params)
+  end
+  def self.public_params
+    [:id, :login, :favs, :url, :activated_at, :created_at, :name]
   end
   def self.find(id_or_username,*others)
     if id_or_username.class!=String || id_or_username.to_i.to_s == id_or_username

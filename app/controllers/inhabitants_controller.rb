@@ -11,14 +11,14 @@ class InhabitantsController < ApplicationController
   def edit
     @inhabitant=Inhabitant.find(params[:id])
   end
-#  def index LOOK AT the list of users: not show emails, passwords,... (it's not required the method though)
-#    @inhabitants=Inhabitant.find(:all, :order=>"created_at DESC")
-#    respond_to do |format|
-#      format.html # show.html.erb
-#      format.xml  { render :xml => @inhabitants.to_xml }
-#    end
-#
-#  end
+  def index
+    @inhabitants=Inhabitant.find(:all, :order=>"created_at DESC")
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @inhabitants.to_xml(:only=>Inhabitant.public_params) }
+    end
+
+  end
  
   # GET /inhabitants/1
   # GET /inhabitants/1.xml

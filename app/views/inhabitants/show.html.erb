@@ -1,5 +1,6 @@
 <h1>Username: <%=h @inhabitant.login %></h1>
 Favs: <%=h @inhabitant.favs %><br />
+name: <%=h @inhabitant.name %><br />
 url: <%=h @inhabitant.url %><br />
 activated_at: <%=h @inhabitant.activated_at %><br />
 <%= link_to 'Show transfers', :controller=>:transfers, :user=>@inhabitant %>
