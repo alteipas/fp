@@ -4,17 +4,14 @@
     <th>Username</th>
     <th>Favs</th>
     <th>Url</th>
-    <th>Created_at</th>
   </tr>
 
 <% for inhabitant in @inhabitants %>
   <tr>
-    <td><%=h inhabitant.login %></td>
+    <td><%= link_to (inhabitant.login || "without username yet"), inhabitant %></td>
     <td><%=h inhabitant.favs %></td>
-    <td><%=h inhabitant.name %></td>
-    <td><%=h inhabitant.url %></td>
-    <td><%=h inhabitant.created_at %></td>
-    <td><%= link_to 'Show', inhabitant %></td>
+    <%url=inhabitant.url%>
+    <td><%=link_to(url, url) if url%>
   </tr>
 <% end %>
 </table>
