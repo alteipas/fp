@@ -19,7 +19,7 @@ class TransfersController < ApplicationController
     conditions=[]
     sender=Inhabitant.find(params[:sender]) if params[:sender]
     receiver=Inhabitant.find(params[:receiver]) if params[:receiever]
-    user=Inhabitant.find(params[:user]) if params[:user]
+    user=Inhabitant.find(params[:id]) if params[:id]
     if user
       conditions=["sender_id=? or receiver_id=?",user.id,user.id]
     elsif sender and receiver
