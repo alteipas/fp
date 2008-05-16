@@ -1,9 +1,11 @@
 class InhabitantMailer < ActionMailer::Base
   def signup_notification(inhabitant)
-    @inviter=inhabitant.inviter
+    inviter=inhabitant.inviter
+    @body[:inviter_name]=inviter.to_s
+    @body[:invitation_favs]=inhabitant.invitation_favs
     setup_email(inhabitant)
-    if @inviter
-      @subject    += "#{@inviter} has thanked you"
+    if inviter
+      @subject    += "#{inviter.to_s} has thanked you"
     else
       @subject += "midas or error"
     end
