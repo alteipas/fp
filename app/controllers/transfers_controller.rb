@@ -51,17 +51,6 @@ class TransfersController < ApplicationController
     end
   end
 
-  def prepare_params(params)
-    p=params[:transfer] || {}
-    [:receiver_id, :receiver, :sender, :sender_id, :amount].each do |arg|
-      if p[arg] && p[arg]==""
-        p.delete(arg)
-      elsif params[arg]
-        p[arg]=params.delete(arg)
-      end
-    end
-    p
-  end
 
   # POST /transfers
   # POST /transfers.xml
@@ -92,6 +81,19 @@ class TransfersController < ApplicationController
   end
 
   protected
+
+  def prepare_params(params)
+    p=params[:transfer] || {}
+    [:receiver_id, :receiver, :sender, :sender_id, :amount].each do |arg|
+      if p[arg] && p[arg]==""
+        p.delete(arg)
+      elsif params[arg]
+        p[arg]=params.delete(arg)
+      end
+    end
+    p
+  end
+
   def authorize
     authenticate_or_request_with_http_basic do |username, password|
       #username == "hector" && password == "pass"
