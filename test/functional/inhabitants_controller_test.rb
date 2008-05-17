@@ -14,10 +14,13 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     @controller = InhabitantsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    
     @midas=Inhabitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net", :inviter_id=>nil)
+
+    #TODO: create @user1 and @user2 calling create_inhabitant (so transfers are created automatically)
     @user1=Inhabitant.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com", :inviter_id=>@midas.id)
     @user2=Inhabitant.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com", :inviter_id=>@midas.id)
+    Transfer.create(:sender=>@midas, :receiver=>@user1)
+    Transfer.create(:sender=>@midas, :receiver=>@user2)
 
     ActionMailer::Base.deliveries = []
   end
@@ -84,12 +87,16 @@ class InhabitantsControllerTest < Test::Unit::TestCase
 
   end
   def test_should_update_email_only_first_time
-    login_as('user1')
+    login_as('midas')
+    u=create_inhabitant
+    @controller.current_inhabitant=u # TODO: login_as(u.login) doesn't work
+    assert_equal u, @controller.current_inhabitant
+    assert_equal 1, u.favs
     u=nil
     assert_difference 'Inhabitant.count' do
       u=create_inhabitant(:email => nil, :login => 'newuser')
-      assert ActionMailer::Base.deliveries.empty?
     end
+    #assert ActionMailer::Base.deliveries.empty?
     assert_equal nil,Inhabitant.find('newuser').email
     assert_equal nil, u.email
     login_as('newuser')
@@ -133,7 +140,7 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   def test_should_signup_without_require_password
     login_as('user2')
     assert_difference 'Inhabitant.count' do
-      create_inhabitant(:password => nil, :password_confiration=>nil)
+      u=create_inhabitant(:password => nil, :password_confiration=>nil)
     end
   end
 

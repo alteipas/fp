@@ -77,23 +77,23 @@ class InhabitantTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_create_transfer_by_inviter
-    @user1.favs=50
-    assert @user1.save
-    u=nil
-  
-    assert_difference 'Transfer.count' do
-      u = create_inhabitant(:inviter_id=>@user1.id)
-    end
-    assert u
-    assert_equal 1,u.favs
-    @user1.reload
-    assert_equal 49,@user1.favs
-    u2 = create_inhabitant(:inviter_id=>@user1.id, :invitation_favs=>5)
-    assert_equal 5,u2.favs
-    @user1.reload
-    assert_equal 44,@user1.favs
-  end
+#  def test_should_create_transfer_by_inviter
+#    @user1.favs=50
+#    assert @user1.save
+#    u=nil
+#  
+#    assert_difference 'Transfer.count' do
+#      u = create_inhabitant(:inviter_id=>@user1.id)
+#    end
+#    assert u
+#    assert_equal 1,u.favs
+#    @user1.reload
+#    assert_equal 49,@user1.favs
+#    u2 = create_inhabitant(:inviter_id=>@user1.id, :invitation_favs=>5)
+#    assert_equal 5,u2.favs
+#    @user1.reload
+#    assert_equal 44,@user1.favs
+#  end
   def test_not_create_transfer_if_inviter_no_favs
     @user1.favs=0
     @user1.save

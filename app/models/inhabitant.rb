@@ -26,7 +26,7 @@ class Inhabitant < ActiveRecord::Base
   validate_on_create :inviter_enough_favs#, :unless => :superuser?
   validate :login_not_numeric
   validate :login_not_include_dots
-  after_create :first_transfer#, :unless => :superuser?
+#  after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password
   before_create :make_login_by_email_token 
   # prevents a user from submitting a crafted form that bypasses activation
@@ -49,9 +49,9 @@ class Inhabitant < ActiveRecord::Base
       end
     end
   end
-  def first_transfer
-    t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_favs || 1) unless superuser?
-  end
+#  def first_transfer
+#    t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_favs || 1) unless superuser?
+#  end
   def to_xml(*params)
     params[0]={:only=>Inhabitant.public_params} unless params[0]
     super(*params)

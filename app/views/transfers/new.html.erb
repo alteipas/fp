@@ -4,8 +4,6 @@
 
 User: <%=@current_inhabitant.login if @current_inhabitant%>
 
-Receiver: <%=@receiver.login%>
-
 <% form_for(@transfer) do |f| %>
  <p>
     <%= f.hidden_field :receiver_id %>

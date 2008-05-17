@@ -65,10 +65,14 @@ class InhabitantsController < ApplicationController
     @inhabitant = Inhabitant.new(p)
     respond_to do |format|
       if @inhabitant.save
+
+        t=Transfer.create(:sender_id=>p[:inviter_id], :receiver_id=>@inhabitant.id, :amount=>@inhabitant.invitation_favs) unless @inhabitant.superuser?
+        
         flash[:notice] = "#{@inhabitant.email} has been invited!"
         format.html { redirect_to (current_inhabitant) }
         format.xml  { render :xml => @inhabitant.to_xml, :status => :created, :location => @inhabitant }
       else
+
         format.html { render :action => "new" }
         format.xml  { render :xml => @inhabitant.errors, :status => :unprocessable_entity }
       end

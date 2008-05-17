@@ -51,6 +51,18 @@ class TransfersController < ApplicationController
     end
   end
 
+  def prepare_params(params)
+    p=params[:transfer] || {}
+    [:receiver_id, :receiver, :sender, :sender_id, :amount].each do |arg|
+      if p[arg] && p[arg]==""
+        p.delete(arg)
+      elsif params[arg]
+        p[arg]=params.delete(arg)
+      end
+    end
+    p
+  end
+
   # POST /transfers
   # POST /transfers.xml
   def create
@@ -60,11 +72,12 @@ class TransfersController < ApplicationController
 #      @sender=Inhabitant.authenticate(username,password)
 #    end
     
-    p=params[:transfer]
+    p=prepare_params(params)
+    r=Inhabitant.find(p[:receiver_id] || p[:receiver])
     @transfer = Transfer.new(p.merge(
       :sender=>current_inhabitant,
-      :receiver=>Inhabitant.find(p[:receiver_id] || p[:receiver])
-    ))
+      :receiver=>r)
+    )
 
     respond_to do |format|
       if @transfer.save
@@ -72,7 +85,7 @@ class TransfersController < ApplicationController
         format.html { redirect_to(@transfer) }
         format.xml  { render :xml => @transfer, :status => :created, :location => @transfer }
       else
-        format.html { render :action => "new" }
+        format.html { render :action=>"new" }
         format.xml  { render :xml => @transfer.errors, :status => :unprocessable_entity }
       end
     end

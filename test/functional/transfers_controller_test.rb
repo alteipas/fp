@@ -51,6 +51,22 @@ class TransfersControllerTest < Test::Unit::TestCase
       post :create, :transfer => {}
     end
   end
+#  def test_should_not_create_transfer_if_no_favs
+#    @inhabitant.reload
+#    @inhabitant=create_inhabitant_and_activate
+#    #assert_equal 1, Transfer.count
+#    assert_equal 1, @inhabitant.inputs.size
+#    assert_equal 1, @inhabitant.favs
+#    assert_difference('Transfer.count') do
+#      post :create, :transfer => {:receiver=>'midas'}
+#      assert_equal 3, assigns(:transfer).errors
+#    end
+#    @inhabitant.reload
+#    assert_equal 0, @inhabitant.favs
+#    assert_no_difference('Transfer.count') do
+#      post :create, :transfer => {:receiver=>'midas'}
+#    end
+#  end
   def test_should_not_create_transfer_if_receiver_is_sender
     assert_no_difference('Transfer.count') do
       post :create, :transfer => {:receiver=>@inhabitant}
