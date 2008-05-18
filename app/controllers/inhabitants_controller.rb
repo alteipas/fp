@@ -66,7 +66,7 @@ class InhabitantsController < ApplicationController
     respond_to do |format|
       if @inhabitant.save
 
-        t=Transfer.create(:sender_id=>p[:inviter_id], :receiver_id=>@inhabitant.id, :amount=>@inhabitant.invitation_favs) unless @inhabitant.superuser?
+        t=Transfer.create(:sender_id=>p[:inviter_id], :receiver_id=>@inhabitant.id, :amount=>@inhabitant.invitation_favs, :ip=>request.remote_ip) unless @inhabitant.superuser?
         
         flash[:notice] = "#{@inhabitant.email} has been invited!"
         format.html { redirect_to (current_inhabitant) }

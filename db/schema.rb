@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.datetime "created_at"
     t.string   "description", :default => ""
     t.string   "link"
+    t.string   "ip"
     t.datetime "updated_at"
   end
 

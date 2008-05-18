@@ -36,7 +36,7 @@ class TransfersController < ApplicationController
     current_inhabitant
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @transfers }
+      format.xml  { render :xml => @transfers.to_xml(:except=>[:ip]) }
     end
   end
 
@@ -47,7 +47,7 @@ class TransfersController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @transfer }
+      format.xml  { render :xml => @transfer.to_xml(:except=>[:ip]) }
     end
   end
 
@@ -65,7 +65,8 @@ class TransfersController < ApplicationController
     r=Inhabitant.find(p[:receiver_id] || p[:receiver])
     @transfer = Transfer.new(p.merge(
       :sender=>current_inhabitant,
-      :receiver=>r)
+      :receiver=>r,
+      :ip=>request.remote_ip)
     )
 
     respond_to do |format|

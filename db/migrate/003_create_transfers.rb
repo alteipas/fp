@@ -7,6 +7,7 @@ class CreateTransfers < ActiveRecord::Migration
       t.datetime :created_at
       t.string :description, :default=>""
       t.string :link
+      t.string :ip
 
       t.timestamps
     end
