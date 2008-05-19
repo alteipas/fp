@@ -61,7 +61,7 @@ class InhabitantsController < ApplicationController
     # uncomment at your own risk
     # reset_session
     p=prepare_params(params)
-    # We try to create a transfer which we know it won't be created (receiver is nil) to check if there are other errors:
+    # We try to create a transfer which won't be created (receiver is nil) to check if there are other errors:
     @transfer=Transfer.create(:sender_id=>current_inhabitant.id,
                              :receiver_id=>nil,
                              :amount=>(p.delete(:amount) || 1).to_i,
@@ -139,24 +139,6 @@ class InhabitantsController < ApplicationController
     end
    end
   def current_inhabitant_and_id_must_match
-    #if !@current_inhabitant or (params[:id]!=@current_inhabitant.login and params[:id].to_i!=@current_inhabitant.id)
     access_denied if @inhabitant != @current_inhabitant
   end
-
-#  def authorize
-#    #authenticate_or_request_with_http_basic do |username, password|
-#      #@user=Inhabitant.authenticate(username,password) \
-#      #  and params[:id]==@user.login or params[:id].to_i==@user.id
-#    #end
-#    if !current_inhabitant or (params[:id]!=@current_inhabitant.login and params[:id].to_i!=@current_inhabitant.id)
-#      #access_denied
-#      
-#      respond_to do |format|
-#        format.html { redirect_to '/login' }
-#        format.xml  { head 401 }
-#      end
-#    end
-#
-#  end
-#  
 end

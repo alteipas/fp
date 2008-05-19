@@ -32,7 +32,6 @@ class TransfersController < ApplicationController
 
 
     @transfers=Transfer.find(:all, :order=>'created_at DESC', :conditions=>conditions)
-    #@transfers = Transfer.find(:all)
     current_inhabitant
     respond_to do |format|
       format.html # index.html.erb
@@ -55,12 +54,6 @@ class TransfersController < ApplicationController
   # POST /transfers
   # POST /transfers.xml
   def create
-#    @sender=nil
-#    authenticate_or_request_with_http_basic do |username, password|
-#      #username == "hector" && password == "pass"
-#      @sender=Inhabitant.authenticate(username,password)
-#    end
-    
     p=prepare_params(params)
     r=Inhabitant.find(p[:receiver_id] || p[:receiver])
     @transfer = Transfer.new(p.merge(
@@ -97,7 +90,6 @@ class TransfersController < ApplicationController
 
   def authorize
     authenticate_or_request_with_http_basic do |username, password|
-      #username == "hector" && password == "pass"
       @inhabitant=Inhabitant.authenticate(username,password)
       @inhabitant.id == params[:transfer][:sender_id] if @inhabitant
     end
