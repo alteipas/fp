@@ -15,7 +15,7 @@
 
 <p>
   <b>Created at:</b>
-  <%=h @transfer.created_at %>
+  <%=time_ago_in_words(@transfer.created_at)%> ago
 </p>
 
 <p>
@@ -24,7 +24,6 @@
 </p>
 
 <p>
-  <b>Link:</b>
   <%=h @transfer.link %>
 </p>
 
