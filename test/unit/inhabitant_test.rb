@@ -77,40 +77,6 @@ class InhabitantTest < Test::Unit::TestCase
     end
   end
 
-#  def test_should_create_transfer_by_inviter
-#    @user1.favs=50
-#    assert @user1.save
-#    u=nil
-#  
-#    assert_difference 'Transfer.count' do
-#      u = create_inhabitant(:inviter_id=>@user1.id)
-#    end
-#    assert u
-#    assert_equal 1,u.favs
-#    @user1.reload
-#    assert_equal 49,@user1.favs
-#    u2 = create_inhabitant(:inviter_id=>@user1.id, :invitation_favs=>5)
-#    assert_equal 5,u2.favs
-#    @user1.reload
-#    assert_equal 44,@user1.favs
-#  end
-  def test_not_create_transfer_if_inviter_no_favs
-    @user1.favs=0
-    @user1.save
-    u=nil
-    assert_no_difference 'Transfer.count' do
-      u = create_inhabitant(:inviter_id=>@user1.id)
-    end
-    assert !u.valid?
-
-    @user1.favs=4
-    @user1.save
-    assert_no_difference 'Transfer.count' do
-      u = create_inhabitant(:inviter_id=>@user1.id, :invitation_favs=>5)
-    end
-    assert !u.valid?
- 
-  end
   def test_should_reset_password
     #@user2.update_attributes(:password => 'new password', :password_confirmation => 'new password')
     u=create_inhabitant
@@ -174,7 +140,7 @@ class InhabitantTest < Test::Unit::TestCase
 protected
   def create_inhabitant(options = {})
     aleat='aleat' + (10000+rand(89999)).to_s
-    record = Inhabitant.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :inviter_id=>Inhabitant.find('midas').id }.merge(options))
+    record = Inhabitant.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat}.merge(options))
     record.reload if record.valid?
     record.favs=options['favs'] if options['favs']
     record.save

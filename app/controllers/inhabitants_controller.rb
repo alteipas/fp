@@ -61,20 +61,27 @@ class InhabitantsController < ApplicationController
     # uncomment at your own risk
     # reset_session
     p=prepare_params(params)
-    p[:inviter_id]=current_inhabitant.id
-    @inhabitant = Inhabitant.new(p)
+    # We try to create a transfer which we know it won't be created (receiver is nil) to check if there are other errors:
+    @transfer=Transfer.create(:sender_id=>current_inhabitant.id,
+                             :receiver_id=>nil,
+                             :amount=>(p.delete(:amount) || 1).to_i,
+                             :ip=>request.remote_ip)
+    @inhabitant=Inhabitant.new(p)
+    transfer_valid = @transfer.errors.count == 1 ? true : false
     respond_to do |format|
-      if @inhabitant.save
-
-        t=Transfer.create(:sender_id=>p[:inviter_id], :receiver_id=>@inhabitant.id, :amount=>@inhabitant.invitation_favs, :ip=>request.remote_ip) unless @inhabitant.superuser?
+      if @inhabitant.valid? && transfer_valid
+        #transaction?
+        @inhabitant.save
+        @transfer.receiver=@inhabitant
+        @transfer.save
         
         flash[:notice] = "#{@inhabitant.email} has been invited!"
-        format.html { redirect_to (current_inhabitant) }
+        format.html { redirect_to(current_inhabitant) }
         format.xml  { render :xml => @inhabitant.to_xml, :status => :created, :location => @inhabitant }
       else
-
+        errors=@inhabitant.valid? ? @transfer.errors : @inhabitant.errors
         format.html { render :action => "new" }
-        format.xml  { render :xml => @inhabitant.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -112,7 +119,7 @@ class InhabitantsController < ApplicationController
 
   def prepare_params(params)
     p=params[:inhabitant] || {}
-    [:login,:email,:id,:url,:password,:password_confirmation,:invitation_favs].each do |arg|
+    [:login,:email,:id,:url,:password,:password_confirmation,:amount].each do |arg|
       if p[arg] && p[arg]==""
         p.delete(arg)
       elsif params[arg]

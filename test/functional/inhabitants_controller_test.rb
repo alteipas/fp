@@ -14,11 +14,11 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     @controller = InhabitantsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    @midas=Inhabitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net", :inviter_id=>nil)
+    @midas=Inhabitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
 
     #TODO: create @user1 and @user2 calling create_inhabitant (so transfers are created automatically)
-    @user1=Inhabitant.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com", :inviter_id=>@midas.id)
-    @user2=Inhabitant.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com", :inviter_id=>@midas.id)
+    @user1=Inhabitant.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com")
+    @user2=Inhabitant.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com")
     Transfer.create(:sender=>@midas, :receiver=>@user1)
     Transfer.create(:sender=>@midas, :receiver=>@user2)
 
@@ -88,10 +88,16 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   end
   def test_should_update_email_only_first_time
     login_as('midas')
+    assert @midas.valid?
+    #@controller.current_inhabitant=@midas
+    #assert_equal @midas, @controller.current_inhabitant # TODO: login_as(u.login) doesn't work
+    i=Inhabitant.create(:login=>"login",:email=>"my@email.com")
+    assert_equal 0, i.favs
     u=create_inhabitant
+    assert_equal 1, u.inputs.size
+    assert_equal 1, u.favs
     @controller.current_inhabitant=u # TODO: login_as(u.login) doesn't work
     assert_equal u, @controller.current_inhabitant
-    assert_equal 1, u.favs
     u=nil
     assert_difference 'Inhabitant.count' do
       u=create_inhabitant(:email => nil, :login => 'newuser')
@@ -195,13 +201,6 @@ class InhabitantsControllerTest < Test::Unit::TestCase
 #    get :index
 #    assert ... assigns(:inhabitants)
 #  end
-  def test_should_not_create_inhabitant_if_invitation_favs_is_zero
-    login_as(@user1)
-    assert_no_difference 'Inhabitant.count' do
-      create_inhabitant(:invitation_favs=>0)
-    end
-  end
-  
   def test_should_not_activate_user_without_key
     get :activate
     assert_nil flash[:notice]
@@ -227,7 +226,8 @@ class InhabitantsControllerTest < Test::Unit::TestCase
         :password_confirmation => key
       }.merge(options)
       inhabitant=assigns(:inhabitant)
-      inhabitant.reload if inhabitant && inhabitant.valid?
+      transfer=assigns(:transfer)
+      inhabitant.reload if inhabitant && inhabitant.valid? && transfer && transfer.valid?
       inhabitant
     end
 end

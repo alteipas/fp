@@ -2,16 +2,10 @@ require 'digest/sha1'
 class Inhabitant < ActiveRecord::Base
   has_many :inputs, :class_name => "Transfer", :order=>'created_at DESC', :foreign_key=>'receiver_id'
   has_many :outputs, :class_name => "Transfer", :order=>'created_at DESC', :foreign_key=>'sender_id'
-  has_many :invited_inhabitants, :class_name => "Inhabitant", :order=>'created_at DESC', :foreign_key=>'inviter_id'
-  belongs_to :inviter, 
-             :class_name => "Inhabitant" ,
-             :foreign_key => "inviter_id"
-
 
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-  validates_presence_of     :inviter_id,                 :unless => :superuser?
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
@@ -22,16 +16,13 @@ class Inhabitant < ActiveRecord::Base
   validates_uniqueness_of   :login, :case_sensitive => false, :allow_nil => true
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_nil => true
   validates_numericality_of :favs, :greater_than_or_equal_to=>0
-  validates_numericality_of :invitation_favs, :greater_than=>0 #TODO: Delete invitation_favs from the model?
-  validate_on_create :inviter_enough_favs#, :unless => :superuser?
   validate :login_not_numeric
   validate :login_not_include_dots
-#  after_create :first_transfer#, :unless => :superuser?
   before_save :encrypt_password
   before_create :make_login_by_email_token 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id, :invitation_favs
+  attr_accessible :login, :email, :password, :password_confirmation, :url, :name, :inviter_id
   def superuser?
     login=='midas'
   end
@@ -42,16 +33,6 @@ class Inhabitant < ActiveRecord::Base
     errors.add_to_base("username can't be a number") if login.to_i.to_s==login
   end
 
-  def inviter_enough_favs
-    if !superuser?
-      if !inviter.superuser? && inviter.favs < (invitation_favs || 1)
-        errors.add_to_base("inviter doesn't have enough favs")
-      end
-    end
-  end
-#  def first_transfer
-#    t=Transfer.create(:sender_id=>inviter_id, :receiver_id=>id, :amount=>invitation_favs || 1) unless superuser?
-#  end
   def to_xml(*params)
     params[0]={:only=>Inhabitant.public_params} unless params[0]
     super(*params)

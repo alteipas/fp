@@ -82,7 +82,7 @@ class TransfersControllerTest < Test::Unit::TestCase
   protected
   def create_inhabitant_and_activate(options = {})
     key=options[:key] || 'quire' + (10000+rand(89999)).to_s
-    record = Inhabitant.create({ :login => key, :email => key + '@example.com', :password => key, :password_confirmation => key, :inviter_id=>@midas.id }.merge(options))
+    record = Inhabitant.create({ :login => key, :email => key + '@example.com', :password => key, :password_confirmation => key }.merge(options))
     record.activate
     record.reload if record.valid?
     record

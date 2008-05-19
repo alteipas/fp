@@ -16,7 +16,7 @@ class SessionsControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     @midas=Inhabitant.create(:login=>"midas",:password=>"test",:password_confirmation=>"test",:email=>"midas@email.com")
-    @inhabitant=Inhabitant.create(:login=>"inhabitant",:password=>"test",:password_confirmation=>"test",:email=>"inhabitant2@email.com", :inviter_id=>@midas.id)
+    @inhabitant=Inhabitant.create(:login=>"inhabitant",:password=>"test",:password_confirmation=>"test",:email=>"inhabitant2@email.com")
   end
 
   def test_should_get_root

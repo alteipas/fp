@@ -8,12 +8,20 @@ class Transfer < ActiveRecord::Base
   validates_presence_of     :sender_id, :receiver_id
   validates_numericality_of :amount, :greater_than=>0
   validate :sender_isnt_receiver
-  validate :substract_and_add_ok #before_create :substract_and_add
+  validate :substract_and_add_ok?
+  before_create :substract_and_add
 
   def sender_isnt_receiver
     errors.add_to_base("You can't thank yourself!") if receiver == sender
   end
-  def substract_and_add_ok
+  def substract_and_add
+    if sender && sender.valid? && receiver && receiver.valid?
+      #transaction?
+      sender.save
+      receiver.save
+    end
+  end
+  def substract_and_add_ok? #add and substract in validate! TODO: Do it properly! How?
     s=self.sender
     r=self.receiver
     if s and r
@@ -21,8 +29,8 @@ class Transfer < ActiveRecord::Base
       r.favs=r.favs+self.amount
       if s.valid? and r.valid?
         #transaction?
-        s.save
-        r.save
+#        s.save
+#        r.save
       else
         if s.favs<0
           errors.add_to_base("sender doesn't have enough favs")
@@ -30,7 +38,6 @@ class Transfer < ActiveRecord::Base
           errors.add_to_base("error!!")
         end
       end
-
     end
   end
 end

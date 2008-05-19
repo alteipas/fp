@@ -11,7 +11,7 @@ RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
-  config.active_record.observers = :inhabitant_observer
+  config.active_record.observers = :transfer_observer
 
   config.action_controller.session = {
     :session_key => '_favpal_session',
