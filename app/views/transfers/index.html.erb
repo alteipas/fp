@@ -6,7 +6,7 @@
     <th>Amount</th>
     <th>Created at</th>
     <th>Description</th>
-    <th>Link</th>
+    <th></th>
   </tr>
 
 <% for transfer in @transfers %>
@@ -16,10 +16,9 @@
     <%s=transfer.sender%>
     <td><%=link_to s, "/#{s.to_param}" %></td>
     <td><%=h transfer.amount %></td>
-    <td><%=h transfer.created_at %></td>
+    <td><%=time_ago_in_words(transfer.created_at)%> ago</td>
     <td><%=h transfer.description %></td>
     <td><%=h transfer.link %></td>
-    <td><%= link_to 'Show', transfer %></td>
   </tr>
 <% end %>
 </table>

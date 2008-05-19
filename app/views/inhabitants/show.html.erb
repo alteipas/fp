@@ -3,7 +3,7 @@ Favs: <%=h @inhabitant.favs %><br />
 name: <%=h @inhabitant.name %><br />
 url: <%=h @inhabitant.url %><br />
 activated_at: <%=h @inhabitant.activated_at %><br />
-<%= link_to 'Show transfers', :controller=>:transfers, :user=>@inhabitant %>
+<%= link_to 'Show transfers', :controller=>:transfers, :id=>@inhabitant %>
 <%if current_inhabitant%>
   <%if current_inhabitant==@inhabitant%> - 
     <%= link_to 'Edit', edit_inhabitant_path(@inhabitant) %> - 

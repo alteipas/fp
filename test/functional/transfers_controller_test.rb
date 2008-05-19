@@ -10,6 +10,7 @@ class TransfersControllerTest < Test::Unit::TestCase
     login="mylogin"; pass="pass"
     @midas=Inhabitant.create(:login=>'midas', :email=>'midas@hecpeare.net')
     @inhabitant=create_inhabitant_and_activate(:login=>login,:password=>pass,:password_confirmation=>pass)
+    @transfer=Transfer.create(:receiver=>@inhabitant, :sender=>@midas)
     set_basic_authentication(login,pass)
   end
   def set_basic_authentication(login,password)
@@ -74,7 +75,7 @@ class TransfersControllerTest < Test::Unit::TestCase
   end
 
   def test_should_show_transfer
-    get :show, :id => transfers(:one).id
+    get :show, :id => @transfer.id
     assert_response :success
   end
 
