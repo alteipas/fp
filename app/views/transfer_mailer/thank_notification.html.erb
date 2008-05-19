@@ -1,7 +1,5 @@
 
-<%="#{@sender.to_s} has thanked you #{@amount} favs!"%>
-
-
+<%="#{@sender.to_s} has thanked you #{pluralize(@amount,"fav")}!"%>
 <%if @url%>
   Visit this url to set your password:
   <%=@url%>
