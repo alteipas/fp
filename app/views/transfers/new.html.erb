@@ -2,8 +2,6 @@
 
 <%= error_messages_for :transfer %>
 
-User: <%=@current_inhabitant.login if @current_inhabitant%>
-
 <% form_for(@transfer) do |f| %>
  <p>
     <%= f.hidden_field :receiver_id %>
@@ -16,10 +14,9 @@ User: <%=@current_inhabitant.login if @current_inhabitant%>
   </p>
 
   <p>
-    <b>Description</b><br />
-    <%= f.text_area :description, :rows=>3 %>
+    <b>Thank description</b> (public)<br />
+    <%= f.text_area :description, :rows=>3, :cols=>40 %>
   </p>
-
   <p>
     <%= f.submit "Create" %>
   </p>

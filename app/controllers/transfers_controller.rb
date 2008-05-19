@@ -85,7 +85,7 @@ class TransfersController < ApplicationController
 
   def prepare_params(params)
     p=params[:transfer] || {}
-    [:receiver_id, :receiver, :sender, :sender_id, :amount].each do |arg|
+    [:receiver_id, :receiver, :sender, :sender_id, :amount, :description, :link].each do |arg|
       if p[arg] && p[arg]==""
         p.delete(arg)
       elsif params[arg]

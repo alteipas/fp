@@ -47,6 +47,17 @@ class TransfersControllerTest < Test::Unit::TestCase
     end
     assert_redirected_to transfer_path(assigns(:transfer))
   end
+  def test_should_create_transfer_with_description
+    @inhabitant.favs=50 ; @inhabitant.save # (loged as @inhabitant)
+    r=create_inhabitant_and_activate
+    assert_difference('Transfer.count') do
+      post :create, :transfer => {:receiver=>r,:description=>"thank you!!!"}
+    end
+    t=assigns(:transfer)
+    assert_equal "thank you!!!",t.description
+    assert_redirected_to transfer_path(t)
+    
+  end
   def test_should_not_create_transfer_if_receiver_missing
     assert_no_difference('Transfer.count') do
       post :create, :transfer => {}
