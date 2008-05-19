@@ -58,7 +58,7 @@ class Inhabitant < ActiveRecord::Base
     login || id.to_s
   end
   def to_s
-    login || (name.blank? ? id.to_s : name)
+    login || (name.blank? ? ("inhabitant " + id.to_s) : name)
   end
   def login?
     login
