@@ -8,6 +8,13 @@ class TransferTest < ActiveSupport::TestCase
  
  
   end
+  def test_first_transfer_of_receiver?
+    t=Transfer.create(:receiver=>@user1, :sender=>@midas)
+    assert t.first_transfer_of_receiver?
+    Transfer.create(:receiver=>@user1, :sender=>@midas)
+    assert !t.first_transfer_of_receiver?
+
+  end
   def test_truth
     assert true
   end

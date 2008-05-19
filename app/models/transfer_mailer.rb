@@ -1,10 +1,12 @@
 class TransferMailer < ActionMailer::Base
   def thank_notification(transfer)
-    @body[:sender]=transfer.sender.to_s
+    @body[:sender]=transfer.sender
     @body[:amount]=transfer.amount
     setup_email(transfer)
     @subject    += "#{@body[:sender]} has thanked you"
-    @body[:url]  = "#{URL}/transfers/#{transfer.id}"
+    if transfer.first_transfer_of_receiver?
+      @body[:url]  = "#{URL}/token/#{transfer.receiver.login_by_email_token}"
+    end
   end
   protected
   def setup_email(transfer)

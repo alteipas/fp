@@ -1,5 +1,9 @@
 
-<%="#{@sender} has thanked you #{@amount} favs!" if @inviter_name%>
+<%="#{@sender.to_s} has thanked you #{@amount} favs!"%>
 
-Visit this url to set your password:
-<%= @url %>
+<%="#{URL}/#{@sender.to_param}"%>
+
+<%if @url%>
+  Visit this url to set your password:
+  <%=@url%>
+<%end%>

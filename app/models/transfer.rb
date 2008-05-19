@@ -40,4 +40,7 @@ class Transfer < ActiveRecord::Base
       end
     end
   end
+  def first_transfer_of_receiver?
+    receiver.inputs.count == 1
+  end
 end
