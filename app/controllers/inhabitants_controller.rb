@@ -65,7 +65,8 @@ class InhabitantsController < ApplicationController
     @transfer=Transfer.create(:sender_id=>current_inhabitant.id,
                              :receiver_id=>nil,
                              :amount=>(p.delete(:amount) || 1).to_i,
-                             :ip=>request.remote_ip)
+                             :ip=>request.remote_ip,
+                             :description=>p.delete(:description))
     @inhabitant=Inhabitant.new(p)
     transfer_valid = @transfer.errors.count == 1 ? true : false
     respond_to do |format|
@@ -119,7 +120,7 @@ class InhabitantsController < ApplicationController
 
   def prepare_params(params)
     p=params[:inhabitant] || {}
-    [:login,:email,:id,:url,:password,:password_confirmation,:amount].each do |arg|
+    [:login,:email,:id,:url,:password,:password_confirmation,:amount,:description].each do |arg|
       if p[arg] && p[arg]==""
         p.delete(arg)
       elsif params[arg]

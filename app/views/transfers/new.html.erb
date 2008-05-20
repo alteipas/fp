@@ -1,5 +1,3 @@
-<h1>New transfer</h1>
-
 <%= error_messages_for :transfer %>
 
 <% form_for(@transfer) do |f| %>
@@ -7,19 +5,8 @@
     <%= f.hidden_field :receiver_id %>
   </p>
 
-
-  <p>
-    <b>Amount</b><br />
-    <%= f.text_field :amount %>
-  </p>
-
-  <p>
-    <b>Thank description</b> (public)<br />
-    <%= f.text_area :description, :rows=>3, :cols=>40 %>
-  </p>
-  <p>
-    <%= f.submit "Create" %>
-  </p>
+  <%= f.text_field(:amount,:size=>3) %>
+  <%= f.submit "Thank" %>
 <% end %>
-
+<br />
 <%= link_to 'Back', transfers_path %>
