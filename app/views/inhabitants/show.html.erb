@@ -1,15 +1,29 @@
-<h1>Username: <%=h @inhabitant.login %></h1>
-Favs: <%=h @inhabitant.favs %><br />
-name: <%=h @inhabitant.name %><br />
-url: <%=h @inhabitant.url %><br />
-activated_at: <%=h @inhabitant.activated_at %><br />
-<%= link_to 'Show transfers', :controller=>:transfers, :id=>@inhabitant %>
+<%i=@inhabitant%>
+Username: 
+<%unless i.login.blank?%>
+  <%=i.login%>
+<%else%>
+  no set yet
+<%end%><br />
+Favs: <%=h i.favs %><br />
+<%unless i.name.blank?%>
+  <%= "Name: #{i.name}" %><br />
+<%end%>
+<%unless i.url.blank?%>
+  <%= "URL: #{i.url}"%><br />
+<%end%>
+<%if i.created_at%>
+  created_at: <%=time_ago_in_words i.created_at %> ago<br />
+<%end%>
+<%if i.activated_at%>
+  Email activated_at: <%=time_ago_in_words i.activated_at %> ago<br />
+<%end%>
+<%= link_to 'Show transfers', :controller=>:transfers, :id=>i %>
 <%if current_inhabitant%>
-  <%if current_inhabitant==@inhabitant%> - 
-    <%= link_to 'Edit', edit_inhabitant_path(@inhabitant) %> - 
-    <%=link_to "Invite", :controller=>"inhabitants", :action=>"new"%>
+  <%if current_inhabitant==i%>
+    - <%= link_to 'Edit profile', edit_inhabitant_path(@inhabitant) %>
   <%else%>
-    - <%= link_to 'Thank (1 fav)', {:controller=>:transfers, :receiver=>@inhabitant},:method=>:post, :confirm=>"Are you sure?" %> - 
-    <%= link_to 'Thank', {:controller=>:transfers, :receiver=>@inhabitant, :action=>'new'} %> 
+    - <%= link_to 'Thank (1 fav)', {:controller=>:transfers, :receiver=>i},:method=>:post, :confirm=>"Are you sure?" %> - 
+    <%= link_to 'Thank', {:controller=>:transfers, :receiver=>i, :action=>'new'} %> 
   <%end%>
 <%end%>

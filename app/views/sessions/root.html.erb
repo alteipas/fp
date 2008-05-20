@@ -1,9 +1,1 @@
-<%if @current_inhabitant%>
-  Hi <%=@current_inhabitant.to_s%>!
-  <br />
-  <%=link_to "Profile", :controller=>"inhabitants", :action=>"show", :id=>@current_inhabitant%> - 
-  <%=link_to "Log out", :controller=>"sessions", :action=>"destroy"%>
-<%else%>
-  <%=link_to "Log in", :controller=>"sessions", :action=>"new"%>
-<%end%>
-- <a href="http://wiki.favpal.org">wiki</a>
+

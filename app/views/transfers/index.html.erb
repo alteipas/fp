@@ -1,8 +1,8 @@
 <h1>Listing transfers</h1>
 <table>
   <tr>
-    <th>Receiver</th>
     <th>Sender</th>
+    <th>Receiver</th>
     <th>Amount</th>
     <th>Created at</th>
     <th></th>
@@ -11,10 +11,10 @@
 
 <% for transfer in @transfers %>
   <tr>
-    <%r=transfer.receiver%>
-    <td><%=link_to r, "/#{r.to_param}" %></td>
     <%s=transfer.sender%>
     <td><%=link_to s, "/#{s.to_param}" %></td>
+    <%r=transfer.receiver%>
+    <td><%=link_to r, "/#{r.to_param}" %></td>
     <td><%=h transfer.amount %></td>
     <td><%=time_ago_in_words(transfer.created_at)%> ago</td>
     <td><%=h transfer.description %></td>
