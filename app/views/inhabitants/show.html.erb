@@ -6,6 +6,10 @@ Username:
   no set yet
 <%end%><br />
 Favs: <%=h i.favs %><br />
+<b>Generated wealth: <%=link_to("#{i.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>i.to_param})%></b>
+<%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
+<br />
+<br />
 <%unless i.name.blank?%>
   <%= "Name: #{i.name}" %><br />
 <%end%>

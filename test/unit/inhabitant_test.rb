@@ -36,6 +36,14 @@ class InhabitantTest < Test::Unit::TestCase
     user.save
     assert !user.valid?
   end
+  def test_generated_wealth
+    assert_equal 0, @user1.generated_wealth
+    Transfer.create(:sender=>@midas,:receiver=>@user1,:amount=>500)
+    Transfer.create(:sender=>@user1,:receiver=>@user2,:amount=>50)
+    assert_equal 50, @user1.generated_wealth
+    Transfer.create(:sender=>@user1,:receiver=>@user2,:amount=>200)
+    assert_equal 250, @user1.generated_wealth
+  end
 
   def test_should_create_inhabitant
     assert_difference 'Inhabitant.count' do

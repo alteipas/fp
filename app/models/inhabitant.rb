@@ -26,6 +26,9 @@ class Inhabitant < ActiveRecord::Base
   def superuser?
     login=='midas'
   end
+  def generated_wealth
+    self.outputs.sum(:amount) || 0
+  end
   def login_not_include_dots
     errors.add_to_base("username can't include dots") if login =~ /\./
   end
