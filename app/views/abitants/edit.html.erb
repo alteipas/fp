@@ -1,10 +1,10 @@
-<h1>Editing inhabitant</h1>
+<h1>Editing abitant</h1>
 
-<%= error_messages_for :inhabitant %>
+<%= error_messages_for :abitant %>
 
-<% form_for(@inhabitant) do |f| %>
+<% form_for(@abitant) do |f| %>
 
-  <%unless @inhabitant.login%>
+  <%unless @abitant.login%>
     <p>
       <b>Login</b> (only set first time) <br />
       <%= f.text_field :login %>
@@ -35,4 +35,4 @@
   </p>
 <% end %>
 
-<%= link_to 'Show', @inhabitant %>
+<%= link_to 'Show', @abitant %>

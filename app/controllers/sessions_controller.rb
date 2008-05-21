@@ -4,15 +4,15 @@ class SessionsController < ApplicationController
   def new
   end
   def root
-    current_inhabitant
+    current_abitant
   end
  
   def create
-    self.current_inhabitant = Inhabitant.authenticate(params[:login], params[:password])
+    self.current_abitant = Abitant.authenticate(params[:login], params[:password])
     if logged_in?
       if params[:remember_me] == "1"
-        current_inhabitant.remember_me unless current_inhabitant.remember_token?
-        cookies[:auth_token] = { :value => self.current_inhabitant.remember_token , :expires => self.current_inhabitant.remember_token_expires_at }
+        current_abitant.remember_me unless current_abitant.remember_token?
+        cookies[:auth_token] = { :value => self.current_abitant.remember_token , :expires => self.current_abitant.remember_token_expires_at }
       end
       redirect_back_or_default('/')
       flash[:notice] = "Logged in successfully"
@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    self.current_inhabitant.forget_me if logged_in?
+    self.current_abitant.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
     flash[:notice] = "You have been logged out."

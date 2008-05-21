@@ -5,7 +5,7 @@ class TransfersController < ApplicationController
       p={}; [:amount, :description, :receiver].each{|k| p[k]=params[k] if params[k]}
     end
 
-    if !p[:receiver] || !@receiver=Inhabitant.find(p[:receiver])
+    if !p[:receiver] || !@receiver=Abitant.find(p[:receiver])
       flash[:notice]="Missing or invalid receiver"
       redirect_back_or_default('/transfers')
     end
@@ -17,9 +17,9 @@ class TransfersController < ApplicationController
   # GET /transfers.xml
   def index
     conditions=[]
-    sender=Inhabitant.find(params[:sender]) if params[:sender]
-    receiver=Inhabitant.find(params[:receiver]) if params[:receiever]
-    user=Inhabitant.find(params[:id]) if params[:id]
+    sender=Abitant.find(params[:sender]) if params[:sender]
+    receiver=Abitant.find(params[:receiver]) if params[:receiever]
+    user=Abitant.find(params[:id]) if params[:id]
     if user
       conditions=["sender_id=? or receiver_id=?",user.id,user.id]
     elsif sender and receiver
@@ -32,7 +32,7 @@ class TransfersController < ApplicationController
 
 
     @transfers=Transfer.find(:all, :order=>'created_at DESC', :conditions=>conditions)
-    current_inhabitant
+    current_abitant
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @transfers.to_xml(:except=>[:ip]) }
@@ -55,9 +55,9 @@ class TransfersController < ApplicationController
   # POST /transfers.xml
   def create
     p=prepare_params(params)
-    r=Inhabitant.find(p[:receiver_id] || p[:receiver])
+    r=Abitant.find(p[:receiver_id] || p[:receiver])
     @transfer = Transfer.new(p.merge(
-      :sender=>current_inhabitant,
+      :sender=>current_abitant,
       :receiver=>r,
       :ip=>request.remote_ip)
     )
@@ -90,8 +90,8 @@ class TransfersController < ApplicationController
 
   def authorize
     authenticate_or_request_with_http_basic do |username, password|
-      @inhabitant=Inhabitant.authenticate(username,password)
-      @inhabitant.id == params[:transfer][:sender_id] if @inhabitant
+      @abitant=Abitant.authenticate(username,password)
+      @abitant.id == params[:transfer][:sender_id] if @abitant
     end
   end
 

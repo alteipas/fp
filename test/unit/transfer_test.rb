@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TransferTest < ActiveSupport::TestCase
   def setup
-    @midas=Inhabitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
-    @user1=create_inhabitant(:login=>"user1")
-    @user2=create_inhabitant(:login=>"user2")
+    @midas=Abitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
+    @user1=create_abitant(:login=>"user1")
+    @user2=create_abitant(:login=>"user2")
  
  
   end
@@ -30,7 +30,7 @@ class TransferTest < ActiveSupport::TestCase
     assert !t.valid?
   end
   def test_substract_favs_from_sender
-    u=create_inhabitant
+    u=create_abitant
     u.favs=50
     u.save
     t=create_transfer(:sender=>u, :amount=>1)
@@ -38,13 +38,13 @@ class TransferTest < ActiveSupport::TestCase
     assert_equal 49, u.favs
   end
   def test_sender_isnt_receiver
-    u=create_inhabitant
+    u=create_abitant
     t=create_transfer(:receiver=>u, :sender=>u)
     assert !t.valid?
   end
   def test_add_favs_to_receiver
-    u=create_inhabitant
-    u2=create_inhabitant
+    u=create_abitant
+    u2=create_abitant
     assert_equal 0, u.favs
     assert_equal 0, u2.favs
     t=create_transfer(:receiver=>u, :sender=>@midas, :amount=>1)
@@ -54,8 +54,8 @@ class TransferTest < ActiveSupport::TestCase
     assert_equal 1, u2.favs
   end
   def test_shouldnt_add_if_sender_doesnt_have
-    u=create_inhabitant
-    u2=create_inhabitant
+    u=create_abitant
+    u2=create_abitant
     assert_equal 0, u.favs
     assert_equal 0, u2.favs
 
@@ -69,9 +69,9 @@ class TransferTest < ActiveSupport::TestCase
   def create_transfer(options = {})
     t=Transfer.create({:sender=>@midas,:receiver=>@user1,:amount=>1}.merge(options))
   end
-  def create_inhabitant(options = {})
+  def create_abitant(options = {})
     aleat='quire' + (10000+rand(89999)).to_s
-    record = Inhabitant.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :amount=>50}.merge(options))
+    record = Abitant.create({ :login => aleat, :email => aleat + '@example.com', :password => aleat, :password_confirmation => aleat, :amount=>50}.merge(options))
     record.reload if record.valid?
     record
   end

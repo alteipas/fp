@@ -1,24 +1,24 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'inhabitants_controller'
+require 'abitants_controller'
 
 # Re-raise errors caught by the controller.
-class InhabitantsController; def rescue_action(e) raise e end; end
+class AbitantsController; def rescue_action(e) raise e end; end
 
-class InhabitantsControllerTest < Test::Unit::TestCase
+class AbitantsControllerTest < Test::Unit::TestCase
   # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead
   # Then, you can remove it from this and the units test.
   include AuthenticatedTestHelper
-  include PublicCurrentInhabitantTestHelper
+  include PublicCurrentAbitantTestHelper
 
   def setup
-    @controller = InhabitantsController.new
+    @controller = AbitantsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    @midas=Inhabitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
+    @midas=Abitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
 
-    #TODO: create @user1 and @user2 calling create_inhabitant (so transfers are created automatically)
-    @user1=Inhabitant.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com")
-    @user2=Inhabitant.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com")
+    #TODO: create @user1 and @user2 calling create_abitant (so transfers are created automatically)
+    @user1=Abitant.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com")
+    @user2=Abitant.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com")
     Transfer.create(:sender=>@midas, :receiver=>@user1)
     Transfer.create(:sender=>@midas, :receiver=>@user2)
 
@@ -28,8 +28,8 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     @request.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::b64encode("#{login}:#{password}")
   end
 #  def test_routes
-#    assert_routing "inhabitants", {:controller=>"inhabitants",:action=>"index"}
-#    assert_routing "midas", {:controller=>"inhabitants",:action=>"show",:id=>"midas"}
+#    assert_routing "abitants", {:controller=>"abitants",:action=>"index"}
+#    assert_routing "midas", {:controller=>"abitants",:action=>"show",:id=>"midas"}
 #
 #  end
   def test_truth
@@ -50,18 +50,18 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   def test_update_url
     #xml
     login_as('user2')
-    put :update, :id=>'user2', :inhabitant=>{:url=>"http://mynewurl.com"}, :format=>'xml'
+    put :update, :id=>'user2', :abitant=>{:url=>"http://mynewurl.com"}, :format=>'xml'
     assert_response 200
     #html
     login_as('user2')
-    put :update, :id=>'user2', :inhabitant=>{:url=>"http://mynewurl.com"}
-    assert_redirected_to :controller=>'inhabitants', :action=>'show', :id=>'user2'
+    put :update, :id=>'user2', :abitant=>{:url=>"http://mynewurl.com"}
+    assert_redirected_to :controller=>'abitants', :action=>'show', :id=>'user2'
   end
   def test_not_update_email
     #xml
     login_as('user2')
     get :activate, :login_by_email_token => @user2.login_by_email_token
-    put :update, :id=>'user2', :inhabitant=>{:email=>"newemail@server.com"}, :format=>'xml'
+    put :update, :id=>'user2', :abitant=>{:email=>"newemail@server.com"}, :format=>'xml'
     assert_response 403
   end
   
@@ -80,8 +80,8 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   end
   def test_mail
     login_as('user2')
-    assert_difference 'Inhabitant.count' do
-      create_inhabitant(:email => "hector@hecpeare.net")
+    assert_difference 'Abitant.count' do
+      create_abitant(:email => "hector@hecpeare.net")
     end
     assert !ActionMailer::Base.deliveries.empty?
 
@@ -89,36 +89,36 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   def test_should_update_email_only_first_time
     login_as('midas')
     assert @midas.valid?
-    #@controller.current_inhabitant=@midas
-    #assert_equal @midas, @controller.current_inhabitant # TODO: login_as(u.login) doesn't work
-    i=Inhabitant.create(:login=>"login",:email=>"my@email.com")
+    #@controller.current_abitant=@midas
+    #assert_equal @midas, @controller.current_abitant # TODO: login_as(u.login) doesn't work
+    i=Abitant.create(:login=>"login",:email=>"my@email.com")
     assert_equal 0, i.favs
-    u=create_inhabitant
+    u=create_abitant
     assert_equal 1, u.inputs.size
     assert_equal 1, u.favs
-    @controller.current_inhabitant=u # TODO: login_as(u.login) doesn't work
-    assert_equal u, @controller.current_inhabitant
+    @controller.current_abitant=u # TODO: login_as(u.login) doesn't work
+    assert_equal u, @controller.current_abitant
     u=nil
-    assert_difference 'Inhabitant.count' do
-      u=create_inhabitant(:email => nil, :login => 'newuser')
+    assert_difference 'Abitant.count' do
+      u=create_abitant(:email => nil, :login => 'newuser')
     end
     #assert ActionMailer::Base.deliveries.empty?
-    assert_equal nil,Inhabitant.find('newuser').email
+    assert_equal nil,Abitant.find('newuser').email
     assert_equal nil, u.email
     login_as('newuser')
-    @controller.current_inhabitant=(u) # TODO: login_as('newuser') doesn't work. Why?
-    assert_equal "newuser", @controller.current_inhabitant.login
+    @controller.current_abitant=(u) # TODO: login_as('newuser') doesn't work. Why?
+    assert_equal "newuser", @controller.current_abitant.login
     put :update, :id=>'newuser', :email=>'my@email33.com', :format=>'xml'
 
     assert_response :success
-    assert_equal "my@email33.com",Inhabitant.find('newuser').email
+    assert_equal "my@email33.com",Abitant.find('newuser').email
 
-    get :activate, :login_by_email_token => Inhabitant.find('newuser').login_by_email_token
+    get :activate, :login_by_email_token => Abitant.find('newuser').login_by_email_token
 
     #if email is set (activated), it can't be updated (for now).
     put :update, :id=>'newuser', :email=>'myRENEW@email33.com'
     assert_response 403
-    assert_equal "my@email33.com",Inhabitant.find('newuser').email
+    assert_equal "my@email33.com",Abitant.find('newuser').email
 
 
   end 
@@ -126,66 +126,66 @@ class InhabitantsControllerTest < Test::Unit::TestCase
 #  def test_not_update_username # BUG. See note in the update method.
 #    #xml
 #    login_as('user2')
-#    put :update, :id=>'user2', :inhabitant=>{:login=>"newusername"}, :format=>'xml'
+#    put :update, :id=>'user2', :abitant=>{:login=>"newusername"}, :format=>'xml'
 #    assert_response 403
 #  end
 
   def test_not_update_url_if_authorized_as_other_user
     login_as('user1')
-    put :update, :id=>'user2', :inhabitant=>{:url=>"http://mynewurl.com"}, :format=>'xml'
+    put :update, :id=>'user2', :abitant=>{:url=>"http://mynewurl.com"}, :format=>'xml'
     assert_response 401
   end
   def test_should_allow_signup
     login_as('user2')
-    assert_difference 'Inhabitant.count' do
-      create_inhabitant
+    assert_difference 'Abitant.count' do
+      create_abitant
       assert_response :redirect
     end
   end
 
   def test_should_signup_without_require_password
     login_as('user2')
-    assert_difference 'Inhabitant.count' do
-      u=create_inhabitant(:password => nil, :password_confiration=>nil)
+    assert_difference 'Abitant.count' do
+      u=create_abitant(:password => nil, :password_confiration=>nil)
     end
   end
 
   def test_should_require_password_confirmation_on_signup
     login_as('user2')
-    assert_no_difference 'Inhabitant.count' do
-      create_inhabitant(:password_confirmation => nil,:email=>nil)
+    assert_no_difference 'Abitant.count' do
+      create_abitant(:password_confirmation => nil,:email=>nil)
     end
-    assert assigns(:inhabitant).errors.on(:password_confirmation)
+    assert assigns(:abitant).errors.on(:password_confirmation)
   end
 
   def test_should_create_without_email
     login_as('user2')
-    assert_difference 'Inhabitant.count' do
-      create_inhabitant(:email => nil)
-      assert_redirected_to "/inhabitants/user2"
+    assert_difference 'Abitant.count' do
+      create_abitant(:email => nil)
+      assert_redirected_to "/abitants/user2"
     end
   end
  
   def test_should_sign_up_user_with_login_by_email_token
     login_as('user2')
-    create_inhabitant
-    assigns(:inhabitant).reload
-    assert_not_nil assigns(:inhabitant).login_by_email_token
+    create_abitant
+    assigns(:abitant).reload
+    assert_not_nil assigns(:abitant).login_by_email_token
   end
 
   def test_should_activate_user
     assert !@user1.active?
-    assert Inhabitant.authenticate('user1', 'pass') #It isn't required activate before login (no signup, invitation or signup through other website)
-    get :activate, :login_by_email_token => Inhabitant.find('user1').login_by_email_token
-    assert_redirected_to "/inhabitants/user1/edit"
+    assert Abitant.authenticate('user1', 'pass') #It isn't required activate before login (no signup, invitation or signup through other website)
+    get :activate, :login_by_email_token => Abitant.find('user1').login_by_email_token
+    assert_redirected_to "/abitants/user1/edit"
     assert_not_nil flash[:notice]
     @user1.reload
     assert @user1.active?
-    assert_equal @user1, Inhabitant.authenticate('user1', 'pass')
+    assert_equal @user1, Abitant.authenticate('user1', 'pass')
   end
   def test_should_login_from_email
     get :activate, :login_by_email_token => @user1.login_by_email_token
-    assert_redirected_to "/inhabitants/user1/edit"
+    assert_redirected_to "/abitants/user1/edit"
     @user1.reload
     assert @user1.active?
     login_as(nil)
@@ -195,11 +195,11 @@ class InhabitantsControllerTest < Test::Unit::TestCase
     @user1.reload
     assert @user1.login_by_email_token
     get :activate, :login_by_email_token => @user1.login_by_email_token
-    assert_redirected_to "/inhabitants/user1/edit"
+    assert_redirected_to "/abitants/user1/edit"
   end
-#  def test_should_not_include_email_not_password_of_inhabitants_in_index TODO!!
+#  def test_should_not_include_email_not_password_of_abitants_in_index TODO!!
 #    get :index
-#    assert ... assigns(:inhabitants)
+#    assert ... assigns(:abitants)
 #  end
   def test_should_not_activate_user_without_key
     get :activate
@@ -215,19 +215,19 @@ class InhabitantsControllerTest < Test::Unit::TestCase
   end
 
   protected
-    def create_inhabitant(options = {})
+    def create_abitant(options = {})
       
       key='aleat' + (10000+rand(89999)).to_s unless key=options.delete(:key)
 
-      post :create, :inhabitant => {
+      post :create, :abitant => {
         :login => key,
         :email => key + '@example.com',
         :password => key,
         :password_confirmation => key
       }.merge(options)
-      inhabitant=assigns(:inhabitant)
+      abitant=assigns(:abitant)
       transfer=assigns(:transfer)
-      inhabitant.reload if inhabitant && inhabitant.valid? && transfer && transfer.valid?
-      inhabitant
+      abitant.reload if abitant && abitant.valid? && transfer && transfer.valid?
+      abitant
     end
 end

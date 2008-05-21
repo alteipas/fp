@@ -9,14 +9,14 @@ class SessionsControllerTest < Test::Unit::TestCase
   # Then, you can remove it from this and the units test.
   include AuthenticatedTestHelper
 
-  #fixtures :inhabitants
+  #fixtures :abitants
 
   def setup
     @controller = SessionsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    @midas=Inhabitant.create(:login=>"midas",:password=>"test",:password_confirmation=>"test",:email=>"midas@email.com")
-    @inhabitant=Inhabitant.create(:login=>"inhabitant",:password=>"test",:password_confirmation=>"test",:email=>"inhabitant2@email.com")
+    @midas=Abitant.create(:login=>"midas",:password=>"test",:password_confirmation=>"test",:email=>"midas@email.com")
+    @abitant=Abitant.create(:login=>"abitant",:password=>"test",:password_confirmation=>"test",:email=>"abitant2@email.com")
   end
 
   def test_should_get_root
@@ -24,57 +24,57 @@ class SessionsControllerTest < Test::Unit::TestCase
     assert_response :success
   end
   def test_should_login_and_redirect
-    post :create, :login => 'inhabitant', :password => 'test'
-    assert session[:inhabitant_id]
+    post :create, :login => 'abitant', :password => 'test'
+    assert session[:abitant_id]
     assert_response :redirect
   end
 
   def test_should_fail_login_and_not_redirect
-    post :create, :login => 'inhabitant', :password => 'bad password'
-    assert_nil session[:inhabitant_id]
+    post :create, :login => 'abitant', :password => 'bad password'
+    assert_nil session[:abitant_id]
     assert_response :success
   end
 
   def test_should_logout
-    login_as "inhabitant"
+    login_as "abitant"
     get :destroy
-    assert_nil session[:inhabitant_id]
+    assert_nil session[:abitant_id]
     assert_response :redirect
   end
 
   def test_should_remember_me
-    post :create, :login => 'inhabitant', :password => 'test', :remember_me => "1"
+    post :create, :login => 'abitant', :password => 'test', :remember_me => "1"
     assert_not_nil @response.cookies["auth_token"]
   end
 
   def test_should_not_remember_me
-    post :create, :login => 'inhabitant', :password => 'test', :remember_me => "0"
+    post :create, :login => 'abitant', :password => 'test', :remember_me => "0"
     assert_nil @response.cookies["auth_token"]
   end
   
   def test_should_delete_token_on_logout
-    login_as "inhabitant"
+    login_as "abitant"
     get :destroy
     assert_equal @response.cookies["auth_token"], []
   end
 
   def test_should_login_with_cookie
-    @inhabitant.remember_me
-    @request.cookies["auth_token"] = cookie_for("inhabitant")
+    @abitant.remember_me
+    @request.cookies["auth_token"] = cookie_for("abitant")
     get :new
     assert @controller.send(:logged_in?)
   end
 
   def test_should_fail_expired_cookie_login
-    @inhabitant.remember_me
-    @inhabitant.update_attribute :remember_token_expires_at, 5.minutes.ago
-    @request.cookies["auth_token"] = cookie_for("inhabitant")
+    @abitant.remember_me
+    @abitant.update_attribute :remember_token_expires_at, 5.minutes.ago
+    @request.cookies["auth_token"] = cookie_for("abitant")
     get :new
     assert !@controller.send(:logged_in?)
   end
 
   def test_should_fail_cookie_login
-    @inhabitant.remember_me
+    @abitant.remember_me
     @request.cookies["auth_token"] = auth_token('invalid_auth_token')
     get :new
     assert !@controller.send(:logged_in?)
@@ -85,7 +85,7 @@ class SessionsControllerTest < Test::Unit::TestCase
       CGI::Cookie.new('name' => 'auth_token', 'value' => token)
     end
     
-    def cookie_for(inhabitant)
-      auth_token Inhabitant.find(inhabitant).remember_token
+    def cookie_for(abitant)
+      auth_token Abitant.find(abitant).remember_token
     end
 end

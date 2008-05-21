@@ -11,8 +11,8 @@
 
 <% for transfer in @transfers %>
   <tr>
-    <td><%=link_to_inhabitant transfer.sender %></td>
-    <td><%=link_to_inhabitant transfer.receiver %></td>
+    <td><%=link_to_abitant transfer.sender %></td>
+    <td><%=link_to_abitant transfer.receiver %></td>
     <td><%=h transfer.amount %></td>
     <td><%=time_ago_in_words(transfer.created_at)%> ago</td>
     <td><%=h transfer.description %></td>

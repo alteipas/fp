@@ -1,6 +1,6 @@
-class CreateInhabitants < ActiveRecord::Migration
+class CreateAbitants < ActiveRecord::Migration
   def self.up
-    create_table "inhabitants", :force => true do |t|
+    create_table "abitants", :force => true do |t|
       t.column :login,                     :string
       t.column :email,                     :string
       t.column :crypted_password,          :string, :limit => 40
@@ -16,6 +16,6 @@ class CreateInhabitants < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "inhabitants"
+    drop_table "abitants"
   end
 end

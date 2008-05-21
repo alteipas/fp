@@ -1,5 +1,5 @@
 require 'digest/sha1'
-class Inhabitant < ActiveRecord::Base
+class Abitant < ActiveRecord::Base
   has_many :inputs, :class_name => "Transfer", :order=>'created_at DESC', :foreign_key=>'receiver_id'
   has_many :outputs, :class_name => "Transfer", :order=>'created_at DESC', :foreign_key=>'sender_id'
 
@@ -37,7 +37,7 @@ class Inhabitant < ActiveRecord::Base
   end
 
   def to_xml(*params)
-    params[0]={:only=>Inhabitant.public_params} unless params[0]
+    params[0]={:only=>Abitant.public_params} unless params[0]
     super(*params)
   end
   def self.public_params
@@ -61,7 +61,7 @@ class Inhabitant < ActiveRecord::Base
     login || id.to_s
   end
   def to_s
-    (name.blank? ? nil : name) || login || "inhabitant-#{id}"
+    (name.blank? ? nil : name) || login || "abitant-#{id}"
   end
   def login?
     login

@@ -1,9 +1,9 @@
-module PublicCurrentInhabitantTestHelper
+module PublicCurrentAbitantTestHelper
   module RedefinedMethods
-    def current_inhabitant
+    def current_abitant
       super
     end
-    def current_inhabitant=(new)
+    def current_abitant=(new)
       super(new)
     end
   end

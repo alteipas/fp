@@ -11,7 +11,7 @@
 
 ActiveRecord::Schema.define(:version => 4) do
 
-  create_table "inhabitants", :force => true do |t|
+  create_table "abitants", :force => true do |t|
     t.string   "login"
     t.string   "email"
     t.string   "crypted_password",          :limit => 40

@@ -1,4 +1,4 @@
-<%i=@inhabitant%>
+<%i=@abitant%>
 Username: 
 <%unless i.login.blank?%>
   <%=i.login%>
@@ -23,9 +23,9 @@ Favs: <%=h i.favs %><br />
   Email activated_at: <%=time_ago_in_words i.activated_at %> ago<br />
 <%end%>
 <%= link_to 'Show transfers', :controller=>:transfers, :id=>i %>
-<%if current_inhabitant%>
-  <%if current_inhabitant==i%>
-    - <%= link_to 'Edit profile', edit_inhabitant_path(@inhabitant) %>
+<%if current_abitant%>
+  <%if current_abitant==i%>
+    - <%= link_to 'Edit profile', edit_abitant_path(@abitant) %>
   <%else%>
     - <%= link_to 'Thank (1 fav)', {:controller=>:transfers, :receiver=>i},:method=>:post, :confirm=>"Are you sure?" %> - 
     <%= link_to 'Thank', {:controller=>:transfers, :receiver=>i, :action=>'new'} %> 

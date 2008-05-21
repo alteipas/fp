@@ -1,9 +1,9 @@
 class Transfer < ActiveRecord::Base
   belongs_to :receiver,
-             :class_name => "Inhabitant" ,
+             :class_name => "Abitant" ,
              :foreign_key => "receiver_id"
   belongs_to :sender,
-             :class_name => "Inhabitant" ,
+             :class_name => "Abitant" ,
              :foreign_key => "sender_id"
   validates_presence_of     :sender_id, :receiver_id
   validates_numericality_of :amount, :greater_than=>0

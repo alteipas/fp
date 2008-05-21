@@ -1,16 +1,16 @@
 class DefaultValues < ActiveRecord::Migration
   def self.up
-    inhabitant=Inhabitant.create(
+    abitant=Abitant.create(
             :login => "midas",
             :email => "midas@hecpeare.net",
             :password => "pass",
             :password_confirmation => "pass"
     )
-    inhabitant.activate
+    abitant.activate
  
   end
 
   def self.down
-    Inhabitant.find('midas').destroy
+    Abitant.find('midas').destroy
   end
 end

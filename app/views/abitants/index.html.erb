@@ -1,0 +1,18 @@
+<h1>Listing abitants and cities</h1>
+<table>
+  <tr>
+    <th>Username</th>
+    <th>Favs</th>
+    <th>Url</th>
+  </tr>
+
+<% for abitant in @abitants %>
+  <tr>
+    <td><%= link_to (abitant.login || "without username yet"), abitant %></td>
+    <td><%=h abitant.favs %></td>
+    <%url=abitant.url%>
+    <td><%=link_to(url, url) if url%>
+  </tr>
+<% end %>
+</table>
+
