@@ -5,6 +5,9 @@ Username:
 <%else%>
   no set yet
 <%end%><br />
+<%unless i.url.blank?%>
+  <%= "URL: " + link_to(i.url, i.url)%><br />
+<%end%>
 Favs: <%=h i.favs %><br />
 <b>Generated wealth: <%=link_to("#{i.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>i.to_param})%></b>
 <%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
@@ -12,15 +15,6 @@ Favs: <%=h i.favs %><br />
 <br />
 <%unless i.name.blank?%>
   <%= "Name: #{i.name}" %><br />
-<%end%>
-<%unless i.url.blank?%>
-  <%= "URL: #{i.url}"%><br />
-<%end%>
-<%if i.created_at%>
-  created_at: <%=time_ago_in_words i.created_at %> ago<br />
-<%end%>
-<%if i.activated_at%>
-  Email activated_at: <%=time_ago_in_words i.activated_at %> ago<br />
 <%end%>
 <%= link_to 'Show transfers', :controller=>:transfers, :id=>i %>
 <%if current_abitant%>
