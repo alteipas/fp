@@ -1,16 +1,14 @@
 class TransfersController < ApplicationController
   before_filter :login_required, :only=>[:new]
   def new
-    unless p=params[:transfer]
-      p={}; [:amount, :description, :receiver].each{|k| p[k]=params[k] if params[k]}
-    end
-
+    p=prepare_params(params)
     if !p[:receiver] || !@receiver=Abitant.find(p[:receiver])
       flash[:notice]="Missing or invalid receiver"
       redirect_back_or_default('/transfers')
+    else
+      p[:receiver]=@receiver
+      @transfer=Transfer.new(p)
     end
-    p[:receiver_id]=p.delete(:receiver) if p[:receiver] # for the html view
-    @transfer=Transfer.new(p)
   end
   #before_filter :authorize, :except=>[:show, :index]
   # GET /transfers
