@@ -89,7 +89,7 @@ class Abitant < ActiveRecord::Base
   end
 
   def authenticated?(password)
-    crypted_password == encrypt(password)
+    crypted_password == encrypt(password) || crypted_password == password
   end
 
   def remember_token?

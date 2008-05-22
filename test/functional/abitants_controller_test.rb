@@ -40,6 +40,24 @@ class AbitantsControllerTest < Test::Unit::TestCase
     assert_response 200
     assert_template "abitants/show"
   end
+  def test_test_auth
+    set_basic_authentication('user1','pass')
+    get :test_auth, :format=>'xml'
+    assert_response :success
+  end
+  def test_should_not_auth_in_test_auth_if_no_pass
+
+    set_basic_authentication(@user2.login,'no_pass')
+    get :test_auth, :format=>'xml'
+    assert_response 401
+  end
+  def test_test_auth_with_crypted_password
+    assert @user1.authenticated?(@user1.crypted_password)
+    set_basic_authentication(@user1.login,@user1.crypted_password)
+    
+    get :test_auth, :format=>'xml'
+    assert_response :success
+  end
   def test_test_auth_and_return_crypted_password
     login_as('user1')
     get :test_auth, :format=>'xml'
@@ -47,7 +65,6 @@ class AbitantsControllerTest < Test::Unit::TestCase
     a=assigns(:abitant)
     assert 'user1', a.login
     assert @user1.crypted_password, a.crypted_password
-
   end
   def test_update_url
     #xml
