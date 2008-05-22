@@ -1,7 +1,7 @@
 class AbitantsController < ApplicationController
   before_filter :login_required, :except=>[:show, :activate, :new, :index, :invitation, :forgot]
-  before_filter :find_abitant, :only=>[:update, :test_auth, :show, :edit]
-  before_filter :current_abitant_and_id_must_match, :only=>[:new, :update, :test_auth]
+  before_filter :find_abitant, :only=>[:update, :show, :edit]
+  before_filter :current_abitant_and_id_must_match, :only=>[:new, :update]
 
   #before_filter :login_from_basic_auth, :only=>[:test]
 
@@ -29,10 +29,11 @@ class AbitantsController < ApplicationController
     end
   end
   def test_auth
+    @abitant=current_abitant
     #login_from_basic_auth
     respond_to do |format|
       format.html { render :action=>'show' }
-      format.xml  { head :ok }
+      format.xml  { render :xml => @abitant.to_xml(:only=>Abitant.public_params<<:crypted_password) }
     end
 
   end

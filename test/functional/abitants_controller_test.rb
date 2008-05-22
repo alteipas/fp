@@ -38,14 +38,16 @@ class AbitantsControllerTest < Test::Unit::TestCase
   def test_should_get_show
     get :show, :id=>'user2'
     assert_response 200
+    assert_template "abitants/show"
   end
-  def test_auth_only_user
-    login_as('user2')
-    get :test_auth, :id=>'user2', :format=>'xml'
+  def test_test_auth_and_return_crypted_password
+    login_as('user1')
+    get :test_auth, :format=>'xml'
     assert_response 200
+    a=assigns(:abitant)
+    assert 'user1', a.login
+    assert @user1.crypted_password, a.crypted_password
 
-    get :test_auth, :id=>'user1', :format=>'xml'
-    assert_response 401
   end
   def test_update_url
     #xml

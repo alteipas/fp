@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
   
   #map.connect ':id', :controller => 'abitants', :action => 'show', :requirements=>{:id=>/^(?!abitants)/}
-  map.test_auth '/api/test_auth/:id.xml',   :controller => 'abitants', :action => 'test_auth', :format =>'xml'
+  map.test_auth '/abitants/test_auth.xml',   :controller => 'abitants', :action => 'test_auth', :format =>'xml'
   map.activate '/token/:login_by_email_token', :controller => 'abitants', :action => 'activate'
   map.signup '/invite',                     :controller => 'abitants', :action => 'new'
   map.resources :abitants
