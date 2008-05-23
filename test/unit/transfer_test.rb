@@ -1,19 +1,17 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TransferTest < ActiveSupport::TestCase
+  # Note: t.valid? doesn't work properly (some errors are checked in the before_create substract_and_add)
   def setup
     @midas=Abitant.create(:login=>"midas",:password=>"pass",:password_confirmation=>"pass",:email=>"midas@hecpeare.net")
     @user1=create_abitant(:login=>"user1")
     @user2=create_abitant(:login=>"user2")
- 
- 
   end
   def test_first_transfer_of_receiver?
     t=Transfer.create(:receiver=>@user1, :sender=>@midas)
     assert t.first_transfer_of_receiver?
     Transfer.create(:receiver=>@user1, :sender=>@midas)
     assert !t.first_transfer_of_receiver?
-
   end
   def test_truth
     assert true
@@ -58,9 +56,11 @@ class TransferTest < ActiveSupport::TestCase
     u2=create_abitant
     assert_equal 0, u.favs
     assert_equal 0, u2.favs
-
-    t=create_transfer(:receiver=>u2, :sender=>u, :amount=>1)
-    assert !t.valid?
+    t=nil
+    assert_no_difference 'Transfer.count' do
+      t=create_transfer(:receiver=>u2, :sender=>u, :amount=>1)
+    end
+    #assert !t.valid?
   end
   def test_amount_should_be_greater_than_0
     assert !create_transfer(:amount=>0).valid?
