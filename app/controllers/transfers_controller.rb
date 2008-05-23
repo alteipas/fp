@@ -16,7 +16,7 @@ class TransfersController < ApplicationController
   def index
     conditions=[]
     sender=Abitant.find(params[:sender]) if params[:sender]
-    receiver=Abitant.find(params[:receiver]) if params[:receiever]
+    receiver=Abitant.find(params[:receiver]) if params[:receiver]
     user=Abitant.find(params[:id]) if params[:id]
     if user
       conditions=["sender_id=? or receiver_id=?",user.id,user.id]
