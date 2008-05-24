@@ -67,7 +67,8 @@ class AbitantsController < ApplicationController
                              :receiver_id=>nil,
                              :amount=>(p.delete(:amount) || 1).to_i,
                              :ip=>request.remote_ip,
-                             :description=>p.delete(:description))
+                             :description=>p.delete(:description),
+                             :link=>p.delete(:link))
     @abitant=Abitant.new(p)
     transfer_valid = @transfer.errors.count == 1 ? true : false
     respond_to do |format|

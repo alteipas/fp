@@ -152,7 +152,15 @@ class AbitantsControllerTest < Test::Unit::TestCase
 #    put :update, :id=>'user2', :abitant=>{:login=>"newusername"}, :format=>'xml'
 #    assert_response 403
 #  end
-
+  def test_should_create_with_description_and_link
+    login_as('user1')
+    create_abitant(:link=>"http://link.com", :description=>"kkk")
+    a=assigns(:abitant)
+    assert a.valid?
+    t=a.inputs[0]
+    assert_equal t.link, "http://link.com"
+    assert_equal t.description, "kkk"
+  end
   def test_not_update_url_if_authorized_as_other_user
     login_as('user1')
     put :update, :id=>'user2', :abitant=>{:url=>"http://mynewurl.com"}, :format=>'xml'
