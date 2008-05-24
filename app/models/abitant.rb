@@ -30,10 +30,10 @@ class Abitant < ActiveRecord::Base
     self.outputs.sum(:amount) || 0
   end
   def login_not_include_dots
-    errors.add_to_base("username can't include dots") if login =~ /\./
+    errors.add("username", "can't include dots") if login =~ /\./
   end
   def login_not_numeric #required if login is optional
-    errors.add_to_base("username can't be a number") if login.to_i.to_s==login
+    errors.add("username", "can't be a number") if login.to_i.to_s==login
   end
 
   def to_xml(*params)

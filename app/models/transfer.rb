@@ -26,7 +26,7 @@ class Transfer < ActiveRecord::Base
         r.save
       else
         if s.favs<0
-          errors.add_to_base("sender doesn't have enough favs")
+          errors.add("sender", "doesn't have enough favs")
         else
           errors.add_to_base("error!!")
         end
