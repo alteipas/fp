@@ -79,7 +79,7 @@ class AbitantsController < ApplicationController
         
         flash[:notice] = "#{@abitant.email} has been invited!"
         format.html { redirect_to(current_abitant) }
-        format.xml  { render :xml => @abitant.to_xml, :status => :created, :location => @abitant }
+        format.xml  { render :xml => @abitant.to_xml(:only=>Abitant.public_params<<:crypted_password), :status => :created, :location => @abitant }
       else
         errors=@abitant.valid? ? @transfer.errors : @abitant.errors
         format.html { render :action => "new" }
