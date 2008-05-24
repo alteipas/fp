@@ -71,10 +71,10 @@ class Abitant < ActiveRecord::Base
     !activated_at.nil? #login_by_email_token.nil?
   end
 
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-  def self.authenticate(login, password)
+  # Authenticates a user by their login name (or id) and unencrypted password (or encrypted password).  Returns the user or nil.
+  def self.authenticate(login_or_id, password)
     #u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
-    u = find :first, :conditions => ['login = ?', login] # need to get the salt
+    u = find :first, :conditions => ['login = ? or id = ?', login_or_id, login_or_id] # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
 
