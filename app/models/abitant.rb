@@ -47,6 +47,7 @@ class Abitant < ActiveRecord::Base
     if id_or_username.class!=String || id_or_username.to_i.to_s == id_or_username
       super(id_or_username,*others)
     else
+      
       find_by_login(id_or_username)
     end
   end
@@ -73,8 +74,7 @@ class Abitant < ActiveRecord::Base
 
   # Authenticates a user by their login name (or id) and unencrypted password (or encrypted password).  Returns the user or nil.
   def self.authenticate(login_or_id, password)
-    #u = find :first, :conditions => ['login = ? and activated_at IS NOT NULL', login] # need to get the salt
-    u = find :first, :conditions => ['login = ? or id = ?', login_or_id, login_or_id] # need to get the salt
+    u = find(login_or_id)
     u && u.authenticated?(password) ? u : nil
   end
 
