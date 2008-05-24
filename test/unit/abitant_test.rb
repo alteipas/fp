@@ -19,6 +19,10 @@ class AbitantTest < Test::Unit::TestCase
     u=create_abitant(:login=>"3366")
     assert !u.valid?
   end
+  def test_find_by_email
+    create_abitant(:email=>"my@email.com")
+    assert Abitant.find("my@email.com")
+  end
   def test_to_xml_include_login_and_favs
     abitant=create_abitant
     assert abitant.valid?

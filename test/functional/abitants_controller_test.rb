@@ -53,7 +53,6 @@ class AbitantsControllerTest < Test::Unit::TestCase
   end
   def test_test_auth_with_crypted_password
     assert @user1.authenticated?(@user1.crypted_password)
-    #set_basic_authentication(@user1.login,@user1.crypted_password)
     login_as(@user1)
     
     get :test_auth, :format=>'xml'

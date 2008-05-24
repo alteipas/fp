@@ -43,12 +43,18 @@ class Abitant < ActiveRecord::Base
   def self.public_params
     [:id, :login, :favs, :url, :activated_at, :created_at, :name]
   end
-  def self.find(id_or_username,*others)
-    if id_or_username.class!=String || id_or_username.to_i.to_s == id_or_username
-      super(id_or_username,*others)
+  def self.find(key,*others)
+    if key.class!=String || key.to_i.to_s == key
+      # id
+      super(key,*others)
     else
-      
-      find_by_login(id_or_username)
+      if key =~ /@/
+        # email
+        find_by_email(key)
+      else
+        # login
+        find_by_login(key)
+      end
     end
   end
   # Activates the user in the database.
