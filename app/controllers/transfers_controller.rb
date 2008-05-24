@@ -28,8 +28,7 @@ class TransfersController < ApplicationController
       conditions=["receiver_id=?",receiver.id]
     end
 
-
-    @transfers=Transfer.find(:all, :order=>'created_at DESC', :conditions=>conditions)
+    @transfers=Transfer.find(:all, :include=>[:sender,:receiver], :order=>'transfers.created_at DESC', :conditions=>conditions)
     current_abitant
     respond_to do |format|
       format.html # index.html.erb
