@@ -8,12 +8,19 @@ class Transfer < ActiveRecord::Base
   validates_presence_of     :sender_id, :receiver_id
   validates_numericality_of :amount, :greater_than=>0
   validate :sender_isnt_receiver
+  validate_on_create :enough_favs
   before_create :substract_and_add
 
   def sender_isnt_receiver
     errors.add_to_base("You can't thank yourself!") if receiver == sender
   end
-
+  
+  def enough_favs
+    s=self.sender
+    if s && ((s.favs-self.amount) < 0) && s.login != 'midas'
+      errors.add("sender", "doesn't have enough favs")
+    end
+  end
   def substract_and_add
     s=self.sender
     r=self.receiver
@@ -26,7 +33,7 @@ class Transfer < ActiveRecord::Base
         r.save
       else
         if s.favs<0
-          errors.add("sender", "doesn't have enough favs")
+          #errors.add("sender", "doesn't have enough favs")
         else
           errors.add_to_base("error!!")
         end

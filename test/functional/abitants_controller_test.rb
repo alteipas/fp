@@ -19,8 +19,8 @@ class AbitantsControllerTest < Test::Unit::TestCase
     #TODO: create @user1 and @user2 calling create_abitant (so transfers are created automatically)
     @user1=Abitant.create(:login=>"user1",:password=>"pass",:password_confirmation=>"pass",:email=>"user1@email.com")
     @user2=Abitant.create(:login=>"user2",:password=>"pass",:password_confirmation=>"pass",:email=>"user2@email.com")
-    Transfer.create(:sender=>@midas, :receiver=>@user1)
-    Transfer.create(:sender=>@midas, :receiver=>@user2)
+    @transfer1=Transfer.create(:sender=>@midas, :receiver=>@user1)
+    @transfer2=Transfer.create(:sender=>@midas, :receiver=>@user2)
 
     ActionMailer::Base.deliveries = []
   end
@@ -88,6 +88,16 @@ class AbitantsControllerTest < Test::Unit::TestCase
     assert_response 403
   end
   
+  def test_should_not_invite_if_no_favs
+    login_as('midas')
+    u=create_abitant
+    assert_equal 1, u.favs
+    @controller.current_abitant=(u)
+    assert create_abitant.valid?
+    u.reload
+    assert_equal 0, u.favs
+    assert !create_abitant.valid?
+  end
   def test_weird
 
     #get :activate, :login_by_email_token => @user1.login_by_email_token
@@ -101,6 +111,19 @@ class AbitantsControllerTest < Test::Unit::TestCase
     put :update, :id=>'user1', :email=>'my@emailbb.com', :format=>'xml'
     assert_response 403
   end
+  def test_should_not_invite_if_no_favs
+    login_as('user2')
+    assert_equal 1, @user2.favs
+    a=create_abitant
+    @user2.reload
+    assert_equal 0, @user2.favs
+    assert_no_difference 'Transfer.count' do
+      assert_no_difference 'Abitant.count' do
+        create_abitant(:email => "hector@hecpeare.net")
+      end
+    end
+  end
+
   def test_mail
     login_as('user2')
     assert_difference 'Abitant.count' do
@@ -259,6 +282,12 @@ class AbitantsControllerTest < Test::Unit::TestCase
       abitant=assigns(:abitant)
       transfer=assigns(:transfer)
       abitant.reload if abitant && abitant.valid? && transfer && transfer.valid?
+      if abitant.valid? && abitant.id.nil?
+        #the transfer errors are added in the controller, but the test assign doesn't realize, so:
+        transfer.errors.each do |param,msg|
+          abitant.errors.add(param,msg) unless param=="receiver_id"
+        end
+      end
       abitant
     end
 end

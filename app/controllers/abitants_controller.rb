@@ -62,29 +62,35 @@ class AbitantsController < ApplicationController
     # uncomment at your own risk
     # reset_session
     p=prepare_params(params)
-    # We try to create a transfer which won't be created (receiver is nil) to check if there are other errors:
-    @transfer=Transfer.create(:sender_id=>current_abitant.id,
+    @transfer=Transfer.new(:sender_id=>current_abitant.id,
                              :receiver_id=>nil,
                              :amount=>(p.delete(:amount) || 1).to_i,
                              :ip=>request.remote_ip,
                              :description=>p.delete(:description),
                              :link=>p.delete(:link))
     @abitant=Abitant.new(p)
+    @transfer.valid?
     transfer_valid = @transfer.errors.count == 1 ? true : false
     respond_to do |format|
       if @abitant.valid? && transfer_valid
         #transaction?
         @abitant.save
-        @transfer.receiver=@abitant
+        @transfer.receiver_id=@abitant.id
+        @transfer.valid?
         @transfer.save
         
         flash[:notice] = "#{@abitant.email} has been invited!"
         format.html { redirect_to(current_abitant) }
         format.xml  { render :xml => @abitant.to_xml(:only=>Abitant.public_params<<:crypted_password), :status => :created, :location => @abitant }
       else
-        errors=@abitant.valid? ? @transfer.errors : @abitant.errors
+        unless transfer_valid
+          @transfer.errors.each do |param, msg|
+            @abitant.errors.add(param, msg) unless param=="receiver_id"
+          end
+        end
+        @aa=@abitant.errors
         format.html { render :action => "new" }
-        format.xml  { render :xml => errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @abitant.errors, :status => :unprocessable_entity }
       end
     end
   end
