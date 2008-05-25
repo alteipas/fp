@@ -41,10 +41,14 @@ class AbitantsController < ApplicationController
   # PUT /abitants/1.xml
   def update
     p=prepare_params(params)
-    p.delete(:login) if @abitant.login        ## TODO: return 403 instead of deleting it and 200
-    respond_to do |format|  ## Next code should do it, but it seems there is a fixtures problem (or something else). Test: test_not_update_username
-      if p.include?(:email) and @abitant.active? #or (p.include?(login) and p[:login]!=@abitant.login and !@abitant.login)
-        format.xml{ head 403 }
+    #p.delete(:login) if @abitant.login
+    respond_to do |format|
+      if p.include?(:email) and @abitant.active?
+        @abitant.errors.add("email", "can't be changed after activation (for now)")
+        format.xml  { render :xml => @abitant.errors, :status => :unprocessable_entity }
+      elsif @abitant.login && p[:login] && p[:login] != @abitant.login
+        @abitant.errors.add("login", "can't be changed (#{@abitant.login})")
+        format.xml  { render :xml => @abitant.errors, :status => :unprocessable_entity }
       elsif @abitant.update_attributes(p)
         flash[:notice] = 'Abitant was successfully updated.'
         format.html { redirect_to(@abitant) }

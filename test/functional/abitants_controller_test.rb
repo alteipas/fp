@@ -85,7 +85,7 @@ class AbitantsControllerTest < Test::Unit::TestCase
     login_as('user2')
     get :activate, :login_by_email_token => @user2.login_by_email_token
     put :update, :id=>'user2', :abitant=>{:email=>"newemail@server.com"}, :format=>'xml'
-    assert_response 403
+    assert_response 422
   end
   
   def test_should_not_invite_if_no_favs
@@ -104,12 +104,12 @@ class AbitantsControllerTest < Test::Unit::TestCase
     get :activate, :login_by_email_token => @user2.login_by_email_token
     login_as('user2')
     put :update, :id=>'user2', :email=>'my@email33.com', :format=>'xml'
-    assert_response 403
+    assert_response 422
 
     get :activate, :login_by_email_token => @user1.login_by_email_token #why can't I move it to the first line??
     login_as('user1')
     put :update, :id=>'user1', :email=>'my@emailbb.com', :format=>'xml'
-    assert_response 403
+    assert_response 422
   end
   def test_should_not_invite_if_no_favs
     login_as('user2')
@@ -163,18 +163,18 @@ class AbitantsControllerTest < Test::Unit::TestCase
 
     #if email is set (activated), it can't be updated (for now).
     put :update, :id=>'newuser', :email=>'myRENEW@email33.com'
-    assert_response 403
+    assert_response 422
     assert_equal "my@email33.com",Abitant.find('newuser').email
 
 
   end 
 
-#  def test_not_update_username # BUG. See note in the update method.
-#    #xml
-#    login_as('user2')
-#    put :update, :id=>'user2', :abitant=>{:login=>"newusername"}, :format=>'xml'
-#    assert_response 403
-#  end
+  def test_not_update_username
+    #xml
+    login_as('user2')
+    put :update, :id=>'user2', :abitant=>{:login=>"newusername"}, :format=>'xml'
+    assert_response 422
+  end
   def test_should_create_with_description_and_link
     login_as('user1')
     create_abitant(:link=>"http://link.com", :description=>"kkk")
