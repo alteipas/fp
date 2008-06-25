@@ -18,6 +18,8 @@ class SessionsController < ApplicationController
       flash[:notice] = "Logged in successfully"
     else
       render :action => 'new'
+      flash[:notice] = "Login/password incorrect"
+
     end
   end
 
