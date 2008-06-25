@@ -5,21 +5,49 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Transfers: <%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'scaffold' %>
+  <%= stylesheet_link_tag 'favpal' %>
 </head>
 <body>
-<%if current_abitant%>
-  Hi <%=current_abitant.to_s%>!
-  <%=link_to "Profile", :controller=>"abitants", :action=>"show", :id=>current_abitant%> - 
-  <%=link_to "Invite", :controller=>"abitants", :action=>"new"%> - 
-  <%=link_to "Log out", :controller=>"sessions", :action=>"destroy"%>
-<%else%>
-  <%=link_to "Log in", :controller=>"sessions", :action=>"new"%>
-<%end%>
-- <a href="http://wiki.favpal.org">wiki</a>
-<p style="color: green"><%= flash[:notice] %></p>
+	<div id="wrapper" class="small-content">
+		<div id="header">
 
-<%= yield  %>
+			<div id="user">
+				<% if current_abitant %>
+					Hi <%=h current_abitant.to_s %>! | <%= link_to "Log out", :controller=>"sessions", :action=>"destroy" %>
+				<% else %>
+					<%= link_to "Log in", :controller=>"sessions", :action=>"new" %>
+				<% end %>
+			</div>
 
+			<div id="logo">
+				FavPal
+			</div>
+			
+			<ul class="menu">
+				<li><a href="/">Main</a></li>
+				<% if current_abitant %>
+				  <li><%= link_to "Profile", :controller=>"abitants", :action=>"show", :id=>current_abitant %></li>
+				  <li><%= link_to "Invite", :controller=>"abitants", :action=>"new" %></li>
+				<% end %>
+				<li><a href="http://wiki.favpal.org">Wiki</a></li>
+			</ul>
+			<div style="clear:both"></div>
+		</div>
+		
+		<div id="content">
+
+			<% unless flash[:notice].blank? %>
+			<div id="flash" class="success">
+				<%= flash[:notice] %>
+			</div>
+			<% end %>
+			
+			<%= yield  %>
+		</div>
+		
+		<div id="footer">
+			favpal - 2008
+		</div>
+	</div>
 </body>
 </html>

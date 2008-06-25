@@ -1,23 +1,23 @@
-<h1>Listing transfers</h1>
-<table>
-  <tr>
+<h1 class="title">Listing transfers</h1>
+
+<table id="transfers">
+  <tr class="header">
     <th>Sender</th>
     <th>Receiver</th>
     <th>Amount</th>
     <th>Created at</th>
-    <th></th>
-    <th></th>
+	<th></th>
+	<th></th>
   </tr>
 
 <% for transfer in @transfers %>
-  <tr>
-    <td><%=link_to_abitant transfer.sender %></td>
-    <td><%=link_to_abitant transfer.receiver %></td>
-    <td><%=h transfer.amount %></td>
-    <td><%=time_ago_in_words(transfer.created_at)%> ago</td>
-    <td><%=h transfer.description %></td>
-    <td><%=h transfer.link %></td>
+  <tr class="row">
+    <td class="sender"><%=link_to_abitant transfer.sender %></td>
+    <td class="receiver"><%=link_to_abitant transfer.receiver %></td>
+    <td class="amount"><%=h transfer.amount %></td>
+    <td class="date"><%=time_ago_in_words(transfer.created_at)%> ago</td>
+    <td class="description"><%=h transfer.description %></td>
+    <td class="link"><%=h transfer.link %></td>
   </tr>
 <% end %>
 </table>
-

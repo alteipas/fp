@@ -1,0 +1,105 @@
+/** Some styles */
+a{color: #75a9f0;text-decoration:none;}
+a:hover{text-decoration:underline;}	
+p{margin:10px 0;}
+
+th{
+	font-weight: bold;
+}
+	
+.title{
+	font-size:1.5em;
+	margin:10px 0;
+}
+
+.info{
+	color:#999;
+}
+/* end some styles */
+
+/** Top menu */
+ul.menu{
+	margin-top:20px;
+	background:#f00;
+}
+
+ul.menu li{
+	border:1px solid #2b6cc5;
+	border-bottom:0;
+	float:left;
+	margin-left:10px;
+	padding:.2em 1em;
+	text-align:center;
+	background:#2b6cc5;
+}
+
+ul.menu a{text-decoration:underline;color:#fff;}
+ul.menu a:hover{text-decoration:none;}
+/* end top menu */
+
+/** flash messages */
+#flash{
+	border: 1px solid #75f083;
+	margin-bottom:10px;
+	padding:5px;
+	text-align:center;
+	color:#000;
+}
+	#flash.success{background: #b8e7bd;}
+/* end flash messages */
+
+/** fav details */	
+.fav-details{
+	margin:10px;
+	border:1px solid #ccc;
+	background:#e5e5e5;
+}
+.fav-details p{
+	margin:10px 5px;
+}
+/* end fav details */
+
+/** fav operations */
+ul.fav-operations{
+	padding-top:8px;
+	padding-bottom:8px;		
+	width:130px;
+	border:1px solid #f33;
+	background:#fcc;
+}
+ul.fav-operations li{
+	margin-left:10px;
+}
+ul.fav-operations li a{color:#f33;}
+/* end fav operations */
+
+/** Transfers */
+table#transfers{
+	width:100%;
+	border:1px solid #ccc;
+	background:#e5e5e5;
+}
+table#transfers td.sender{
+	width:80px;
+}
+table#transfers td.receiver{
+	width:80px;
+}
+table#transfers td.amount{
+	width:50px;
+	text-align:right;
+}
+/* end transfers */
+
+/** Listing abitants */
+table#abitants td.amount{
+	text-align: right;
+}
+/* end listing abitants */
+
+/** Common styles for tables */
+table td, table th{
+	padding:5px 10px;
+	border-bottom:1px solid #ccc;	
+}
+/* end common styles for tables */

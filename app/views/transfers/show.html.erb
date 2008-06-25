@@ -1,3 +1,4 @@
+<h1 class="title">Transfer</h1>
 <p>
   <b>Receiver:</b>
   <%=link_to @transfer.receiver, @transfer.receiver %>
@@ -10,7 +11,7 @@
 
 <p>
   <b>Amount:</b>
-  <%=h @transfer.amount %>
+  <%=h pluralize(@transfer.amount, "fav") %>
 </p>
 
 <p>

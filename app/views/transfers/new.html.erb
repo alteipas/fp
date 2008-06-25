@@ -1,5 +1,6 @@
+<h1 class="title">New transfer</h1>
 <%= error_messages_for :transfer %>
-Receiver: <%=link_to_abitant @transfer.receiver%>
+<p><b>Receiver:</b> <%=link_to_abitant @transfer.receiver%></p>
 <% form_for(@transfer) do |f| %>
  <p>
     <%= f.hidden_field :receiver_id %>

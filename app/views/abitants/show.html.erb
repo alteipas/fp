@@ -1,27 +1,49 @@
+<h1 class="title">Profile</h1>
 <%i=@abitant%>
-Username: 
-<%unless i.login.blank?%>
-  <%=i.login%>
-<%else%>
-  no set yet
-<%end%><br />
-<%unless i.url.blank?%>
-  <%= "URL: " + link_to(i.url, i.url)%><br />
-<%end%>
-Favs: <%=h i.favs %><br />
-<b>Generated wealth: <%=link_to("#{i.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>i.to_param})%></b>
-<%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
-<br />
-<br />
+
 <%unless i.name.blank?%>
-  <%= "Name: #{i.name}" %><br />
+  <p>
+	<b>Name:</b> <%= i.name %>
+  </p>
 <%end%>
-<%= link_to 'Show transfers', :controller=>:transfers, :id=>i %>
+<p>
+	<b>Username: </b>
+	<%unless i.login.blank?%>
+	  <%=h i.login %>
+	<%else%>
+	  <i>no set yet</i>
+	<%end%>
+</p>
+<%unless i.url.blank?%>
+<p>
+	<b>URL:</b> <%= link_to(i.url, i.url)%>
+</p>
+<%end%>
+
 <%if current_abitant%>
   <%if current_abitant==i%>
-    - <%= link_to 'Edit profile', edit_abitant_path(@abitant) %>
-  <%else%>
-    - <%= link_to 'Thank (1 fav)', {:controller=>:transfers, :receiver=>i},:method=>:post, :confirm=>"Are you sure?" %> - 
-    <%= link_to 'Thank', {:controller=>:transfers, :receiver=>i, :action=>'new'} %> 
+    <p><%= link_to 'Edit profile', edit_abitant_path(@abitant) %></p>
+  <% end %>
+<% end %>
+
+<div class="fav-details">
+	<p class="favs">
+		<b>Favs:</b> <%=h i.favs %><br />
+	</p>
+	<p class="wealth">
+		<b>Generated wealth:</b> 
+		<%=link_to("#{i.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>i.to_param})%>
+		<%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
+	</p>
+</div>
+
+
+<p><%= link_to 'Show transfers', :controller=>:transfers, :id=>i %></p>
+
+<%if current_abitant%>
+  <%unless current_abitant==i%>
+	<ul class="fav-operations">
+	    <li><%= link_to 'Thank', {:controller=>:transfers, :receiver=>i, :action=>'new'} %></li>
+	</ul>
   <%end%>
 <%end%>
