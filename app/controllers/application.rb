@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include AuthenticatedSystemMod
+  filter_parameter_logging "password"
  
   helper :all # include all helpers, all the time
 
