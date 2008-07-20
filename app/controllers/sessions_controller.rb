@@ -4,8 +4,12 @@ class SessionsController < ApplicationController
   def new
   end
   def root
-    current_abitant
-    render :action=>"root", :layout=>false
+    @abitant=current_abitant
+    if @abitant
+      redirect_to "/#{@abitant}"
+    else
+      render :action=>"root", :layout=>false
+    end
   end
  
   def create
