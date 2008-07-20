@@ -13,9 +13,9 @@
 
 			<div id="user">
 				<% if current_abitant %>
-					Hi <%=h current_abitant.to_s %>! | <%= link_to "Log out", :controller=>"sessions", :action=>"destroy" %>
+				  Hi <%=link_to_abitant current_abitant %>! | <%= link_to "Log out", :controller=>"sessions", :action=>"destroy" %>
 				<% else %>
-					<%= link_to "Log in", :controller=>"sessions", :action=>"new" %>
+				  <%= link_to "Log in", :controller=>"sessions", :action=>"new" %>
 				<% end %>
 			</div>
 
@@ -26,9 +26,10 @@
 			<ul class="menu">
 				<li><a href="/">Main</a></li>
 				<% if current_abitant %>
-				  <li><%= link_to "Profile", :controller=>"abitants", :action=>"show", :id=>current_abitant %></li>
 				  <li><%= link_to "Invite", :controller=>"abitants", :action=>"new" %></li>
 				<% end %>
+				<li><%= link_to "a'bitants", :controller=>"abitants", :action=>"index" %></li>
+				<li><%= link_to "transfers", :controller=>"transfers", :action=>"index" %></li>
 				<li><a href="http://wiki.favpal.org">Wiki</a></li>
 			</ul>
 			<div style="clear:both"></div>
