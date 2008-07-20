@@ -1,4 +1,4 @@
-<h1 class="title">Username: <%= @abitant.login.blank? ? "abitant-#{@abitant.id} (don't set yet)" : h(@abitant.login) %></h1>
+<h1 class="title">Username: <%= h(@abitant.login) || "abitant-#{@abitant.id} (doesn't set yet)" %></h1>
 <span id="options" class="right">
   <%= link_to 'transfers', :controller=>:transfers, :id=>@abitant %>
   <%if current_abitant%>
@@ -24,7 +24,7 @@
   </p>
   <p class="wealth">
     <b>Generated wealth:</b> 
-    <%=link_to("#{@abitant.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>@abitant.to_param})%>
+    <%="#{@abitant.generated_wealth} favs"%>
     <%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
   </p>
 </div>
