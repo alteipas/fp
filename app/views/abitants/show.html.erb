@@ -1,49 +1,33 @@
-<h1 class="title">Profile</h1>
-<%i=@abitant%>
-
-<%unless i.name.blank?%>
+<h1 class="title">Username: <%= @abitant.login.blank? ? "abitant-#{@abitant.id} (don't set yet)" : h(@abitant.login) %></h1>
+<span id="options" class="right">
+  <%= link_to 'transfers', :controller=>:transfers, :id=>@abitant %>
+  <%if current_abitant%>
+    <%if current_abitant==@abitant%>
+      | <%= link_to 'edit profile', edit_abitant_path(@abitant) %>
+    <%else%>
+      | <%= link_to 'thank', {:controller=>:transfers, :receiver=>@abitant, :action=>'new'} %>
+    <%end%>
+  <%end%>
+</span>
+<%unless @abitant.name.blank?%>
   <p>
-	<b>Name:</b> <%= i.name %>
+    <b>Name:</b> <%= @abitant.name %>
   </p>
 <%end%>
 <p>
-	<b>Username: </b>
-	<%unless i.login.blank?%>
-	  <%=h i.login %>
-	<%else%>
-	  <i>no set yet</i>
-	<%end%>
+  <b>URL:</b> <%= link_to(@abitant.url, @abitant.url) unless @abitant.url.blank?%>
 </p>
-<%unless i.url.blank?%>
-<p>
-	<b>URL:</b> <%= link_to(i.url, i.url)%>
-</p>
-<%end%>
-
-<%if current_abitant%>
-  <%if current_abitant==i%>
-    <p><%= link_to 'Edit profile', edit_abitant_path(@abitant) %></p>
-  <% end %>
-<% end %>
 
 <div class="fav-details">
-	<p class="favs">
-		<b>Favs:</b> <%=h i.favs %><br />
-	</p>
-	<p class="wealth">
-		<b>Generated wealth:</b> 
-		<%=link_to("#{i.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>i.to_param})%>
-		<%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
-	</p>
+  <p class="favs">
+    <b>Favs:</b> <%=h @abitant.favs %><br />
+  </p>
+  <p class="wealth">
+    <b>Generated wealth:</b> 
+    <%=link_to("#{@abitant.generated_wealth} favs", {:controller=>:transfers, :action=>"index", :sender=>@abitant.to_param})%>
+    <%=link_to "*","http://wiki.favpal.org/Favonomy#Generated_Wealth"%>
+  </p>
 </div>
 
 
-<p><%= link_to 'Show transfers', :controller=>:transfers, :id=>i %></p>
 
-<%if current_abitant%>
-  <%unless current_abitant==i%>
-	<ul class="fav-operations">
-	    <li><%= link_to 'Thank', {:controller=>:transfers, :receiver=>i, :action=>'new'} %></li>
-	</ul>
-  <%end%>
-<%end%>

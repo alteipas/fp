@@ -6,6 +6,11 @@ p{margin:10px 0;}
 th{
 	font-weight: bold;
 }
+span.right {
+	font-size: 12px;
+	float: right;
+	margin: 0px 0;
+}
 	
 .title{
 	font-size:1.5em;
