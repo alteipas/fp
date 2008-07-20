@@ -24,13 +24,12 @@
 			</div>
 			
 			<ul class="menu">
-				<li><a href="/">Main</a></li>
-				<% if current_abitant %>
-				  <li><%= link_to "Invite", :controller=>"abitants", :action=>"new" %></li>
-				<% end %>
-				<li><%= link_to "a'bitants", :controller=>"abitants", :action=>"index" %></li>
-				<li><%= link_to "transfers", :controller=>"transfers", :action=>"index" %></li>
-				<li><a href="http://wiki.favpal.org">Wiki</a></li>
+                          <li><%= link_to "transfers", :controller=>"transfers", :action=>"index" %></li>
+			  <li><%= link_to "a'bitants", :controller=>"abitants", :action=>"index" %></li>
+			  <% if current_abitant %>
+			    <li><%= link_to "invite", :controller=>"abitants", :action=>"new" %></li>
+			  <% end %>
+			  <li><a href="http://wiki.favpal.org">wiki</a></li>
 			</ul>
 			<div style="clear:both"></div>
 		</div>
