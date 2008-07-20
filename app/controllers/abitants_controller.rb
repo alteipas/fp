@@ -126,6 +126,7 @@ class AbitantsController < ApplicationController
         flash[:notice] = "Email not found"
       end
     end
+    render :action=>"forgot", :layout=>"sessions"
   end
 
   protected

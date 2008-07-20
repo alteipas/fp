@@ -5,6 +5,7 @@ class SessionsController < ApplicationController
   end
   def root
     current_abitant
+    render :action=>"root", :layout=>false
   end
  
   def create
