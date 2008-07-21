@@ -11,11 +11,7 @@
     <div id="wrapper" class="small-content">
       <div id="header">
         <div id="user">
-          <% if current_abitant %>
-            Hi <%=link_to_abitant current_abitant %>! | <%= link_to "Log out", :controller=>"sessions", :action=>"destroy" %>
-          <% else %>
-            <%= link_to "Log in", :controller=>"sessions", :action=>"new" %>
-          <% end %>
+          <%= link_to "wiki", "http://wiki.favpal.org" %>
         </div>
         <div id="logo">
           <%=image_tag("FavPal-small-logo.png",:border=>0)%>
