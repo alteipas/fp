@@ -1,4 +1,4 @@
-<h1 class="title">Username: <%= h(@abitant.login) || "abitant-#{@abitant.id} (doesn't set yet)" %></h1>
+<h1 class="title">Username: <%= !@abitant.login.blank? ? h(@abitant.login) : "abitant-#{@abitant.id} (doesn't set yet)" %></h1>
 <span id="options" class="right">
   <%= link_to 'transfers', :controller=>:transfers, :id=>@abitant %>
   <%if current_abitant%>
