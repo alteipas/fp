@@ -117,8 +117,8 @@ class AbitantsController < ApplicationController
   end
   def forgot
     if request.post?
-      @abitant=Abitant.find_by_email(params[:email])
-      if @abitant.make_login_by_email_token 
+      if @abitant=Abitant.find_by_email(params[:email])
+        @abitant.make_login_by_email_token 
         @abitant.save
         AbitantMailer.deliver_forgot(@abitant)
         flash[:notice] = "An email has been sent to change your password"
