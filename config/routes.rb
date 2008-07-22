@@ -4,9 +4,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :transfers
 
   map.root              :controller => 'sessions', :action => 'root'
-  map.login '/login',   :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.forgot '/forgot', :controller => 'abitants', :action => 'forgot'
+  map.with_options :controller => "sessions" do |page|
+    page.login '/login', :action => 'new'
+    page.logout '/logout', :action => 'destroy'
+  end
   map.resource :session
   
   #map.connect ':id', :controller => 'abitants', :action => 'show', :requirements=>{:id=>/^(?!abitants)/}
