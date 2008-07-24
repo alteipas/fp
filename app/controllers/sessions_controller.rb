@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def root
     @abitant=current_abitant
     if @abitant
-      redirect_to "/#{@abitant}"
+      redirect_to "/#{@abitant.to_param}"
     else
       render :action=>"root", :layout=>false
     end
@@ -22,9 +22,8 @@ class SessionsController < ApplicationController
       redirect_back_or_default('/')
       flash[:notice] = "Logged in successfully"
     else
-      render :action => 'new'
       flash[:notice] = "Login/password incorrect"
-
+      render :action => 'new'
     end
   end
 
