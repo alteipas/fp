@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def root
     @abitant=current_abitant
     if @abitant
-      redirect_to "/#{@abitant}"
+      redirect_to "/#{@abitant.to_param}"
     else
       render :action=>"root", :layout=>false
     end
