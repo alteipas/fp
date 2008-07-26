@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   def new
     respond_to do |format|
       format.html
-      format.mobile{ render :action=>'new.html.erb', :layout=>false}
+      format.mobile{ render :action=>'new.html.erb', :layout=>"application"}
     end
   end
   def root
@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
     else
       respond_to do |format|
         format.html {render :action=>'root', :layout=>false}
-        format.mobile{ render :action=>'root', :layout=>false}
+        format.mobile{ render :action=>'root', :layout=>"application"}
       end
     end
   end

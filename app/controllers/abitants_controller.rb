@@ -9,7 +9,7 @@ class AbitantsController < ApplicationController
   def new
     respond_to do |format|
       format.html
-      format.mobile { render :action=>"new.html.erb", :layout=>false}
+      format.mobile { render :action=>"new.html.erb", :layout=>'application'}
     end
   end
   def edit
@@ -17,14 +17,14 @@ class AbitantsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.mobile { render :action=>"edit.html.erb", :layout=>false}
+      format.mobile { render :action=>"edit.html.erb", :layout=>'application'}
     end
   end
   def index
     @abitants=Abitant.find(:all, :order=>"created_at DESC")
     respond_to do |format|
       format.html
-      format.mobile{ render :action=>'index.html.erb', :layout=>false}
+      format.mobile{ render :action=>'index.html.erb', :layout=>'application'}
       format.xml  { render :xml => @abitants.to_xml(:only=>Abitant.public_params) }
     end
 
@@ -35,7 +35,7 @@ class AbitantsController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
-      format.mobile { render :action=>"show.html.erb", :layout=>false}
+      format.mobile { render :action=>"show.html.erb", :layout=>'application'}
       format.xml  { render :xml => @abitant.to_xml }
     end
   end
