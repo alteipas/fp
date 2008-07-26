@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     params[:format]=format
     keep_format
     @abitant=current_abitant
-    if @abitant
+    if @abitant && format!="mobile"
       redirect_to "/#{@abitant.to_param}"
     else
       respond_to do |format|

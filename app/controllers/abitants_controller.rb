@@ -7,6 +7,10 @@ class AbitantsController < ApplicationController
 
   # render new.rhtml
   def new
+    respond_to do |format|
+      format.html
+      format.mobile { render :action=>"new.html.erb", :layout=>false}
+    end
   end
   def edit
     @abitant=Abitant.find(params[:id])
