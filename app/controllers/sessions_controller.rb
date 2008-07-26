@@ -2,13 +2,23 @@
 class SessionsController < ApplicationController
   # render new.rhtml
   def new
+    respond_to do |format|
+      format.html
+      format.mobile{ render :action=>'new.html.erb', :layout=>false}
+    end
   end
   def root
+    format = request.request_uri=="/mobile" ? 'mobile' : 'html'
+    params[:format]=format
+    keep_format
     @abitant=current_abitant
     if @abitant
       redirect_to "/#{@abitant.to_param}"
     else
-      render :action=>"root", :layout=>false
+      respond_to do |format|
+        format.html {render :action=>'root', :layout=>false}
+        format.mobile{ render :action=>'root', :layout=>false}
+      end
     end
   end
  

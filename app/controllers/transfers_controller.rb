@@ -32,6 +32,7 @@ class TransfersController < ApplicationController
     current_abitant
     respond_to do |format|
       format.html # index.html.erb
+      format.mobile { render :action=>"index.html.erb", :layout=>false}
       format.xml  { render :xml => @transfers.to_xml(:except=>[:ip]) }
     end
   end

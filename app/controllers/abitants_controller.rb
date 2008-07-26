@@ -10,11 +10,17 @@ class AbitantsController < ApplicationController
   end
   def edit
     @abitant=Abitant.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.mobile { render :action=>"edit.html.erb", :layout=>false}
+    end
   end
   def index
     @abitants=Abitant.find(:all, :order=>"created_at DESC")
     respond_to do |format|
       format.html
+      format.mobile{ render :action=>'index.html.erb', :layout=>false}
       format.xml  { render :xml => @abitants.to_xml(:only=>Abitant.public_params) }
     end
 
@@ -25,6 +31,7 @@ class AbitantsController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
+      format.mobile { render :action=>"show.html.erb", :layout=>false}
       format.xml  { render :xml => @abitant.to_xml }
     end
   end
@@ -126,7 +133,10 @@ class AbitantsController < ApplicationController
         flash[:notice] = "Email not found"
       end
     end
-    render :action=>"forgot", :layout=>"sessions"
+    respond_to do |format|
+      format.html {render :action=>'forgot', :layout=>"sessions"}
+      format.mobile{ render :action=>'forgot.html.erb', :layout=>false}
+    end
   end
 
   protected

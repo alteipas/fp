@@ -4,6 +4,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :transfers
 
   map.root              :controller => 'sessions', :action => 'root'
+  map.mobile '/mobile',   :controller => 'sessions', :action => 'root'
   map.forgot '/forgot', :controller => 'abitants', :action => 'forgot'
   map.with_options :controller => "sessions" do |page|
     page.login '/login', :action => 'new'
