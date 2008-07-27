@@ -7,6 +7,12 @@
     <title>FavPal: The PayPal of favors</title>
   </head>
   <body>
+    <% if mobile_user_agent? -%>
+      <div class="message">
+        <p>Mobile? <a href="/mobile">Use the optimised version</a>.</p>
+      </div>
+    <% end -%>
+
     <br />
     <br />
     <br />
