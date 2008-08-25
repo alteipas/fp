@@ -1,3 +1,5 @@
+require 'will_paginate'
+
 class TransfersController < ApplicationController
   before_filter :login_required, :only=>[:new]
   def new
@@ -28,7 +30,12 @@ class TransfersController < ApplicationController
       conditions=["receiver_id=?",receiver.id]
     end
 
-    @transfers=Transfer.find(:all, :include=>[:sender,:receiver], :order=>'transfers.created_at DESC', :conditions=>conditions)
+    @transfers=Transfer.paginate(:all, 
+                                 :include=>[:sender,:receiver], 
+                                 :order=>'transfers.created_at DESC', 
+                                 :conditions=>conditions,
+                                 :page => params[:page], 
+                                 :per_page => 2)
     current_abitant
     respond_to do |format|
       format.html # index.html.erb
