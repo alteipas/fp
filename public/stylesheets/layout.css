@@ -4,7 +4,9 @@ body {
 	line-height: 1.4em;
 	color: #545454;
 	text-align: center;
-	background: #fff;
+	background: #5796ba;
+	background-image: url('../images/fondo.jpg');
+	background-repeat: repeat-x
 }
 
 .small-content{
@@ -31,4 +33,10 @@ body {
 #footer{
 	border-top:1px solid #2b6cc5;
 	padding:10px 0;
+}
+#wrapper {
+	background: #fff;
+	margin-top:20px;
+	padding:10px;
+	border: solid 1px #2b6cc5;
 }
