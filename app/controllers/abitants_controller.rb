@@ -1,3 +1,5 @@
+require 'will_paginate'
+
 class AbitantsController < ApplicationController
   before_filter :login_required, :except=>[:show, :activate, :new, :index, :invitation, :forgot]
   before_filter :find_abitant, :only=>[:update, :show, :edit]
@@ -12,7 +14,11 @@ class AbitantsController < ApplicationController
     @abitant=Abitant.find(params[:id])
   end
   def index
-    @abitants=Abitant.find(:all, :order=>"created_at DESC")
+    
+    @abitants=Abitant.paginate(:all,
+                               :order=>'created_at DESC',
+                               :page => params[:page], 
+                               :per_page => 2 )
     respond_to do |format|
       format.html
       format.xml  { render :xml => @abitants.to_xml(:only=>Abitant.public_params) }
